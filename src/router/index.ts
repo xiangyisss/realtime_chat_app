@@ -8,11 +8,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Login',
     component: Login,
+
   },
   {
     path: '/chat_page',
     name: 'Chat',
     component: Chat,
+    props: true,
   },
 ];
 

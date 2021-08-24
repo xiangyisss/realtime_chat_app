@@ -46,6 +46,7 @@ export default defineComponent({
       if (inputUserName.value) {
         router.push({
           name: 'Chat',
+          params: { userName: inputUserName.value },
         });
         // state.userName = inputUserName.value;
         inputUserName.value = '';

@@ -20,8 +20,9 @@ import { useRouter } from 'vue-router';
 import database from '../db';
 
 export default defineComponent({
+  props: { userName: String },
   name: 'Chat',
-  setup() {
+  setup(props) {
     const router = useRouter();
     const logout = () => {
       router.push({
@@ -32,13 +33,13 @@ export default defineComponent({
     const text : Ref<string> = ref('');
 
     function saveMessages() {
-     console.log('Testing');
       database.firestore().collection('messages').add({
-        name: 'Xiangyi',
+        name: props.userName,
         message: text.value,
         // profilePicUrl: getProfilePicUrl(),
         // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
+      console.log('Testing');
       text.value = '';
     }
 
