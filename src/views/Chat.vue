@@ -2,9 +2,13 @@
   <div class='chat'>
     <header>
       <button @click="logout">Log out</button>
-
     </header>
-    <section class='chat_box'>//Message</section>
+    <section class='chat_box'>//Message
+      <div id="container" v-for="message in allMessages" :key="message.id">
+        <div class="text">{{message.message}}</div>
+        <div class="time">{{message.timestamp.toDate.created_at.toDate()}}</div>
+      </div>
+    </section>
     <footer>
       <form @submit.prevent id="message_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
@@ -42,6 +46,8 @@ export default defineComponent({
         message: text.value,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
+
+      console.log(database);
       text.value = '';
     };
 
@@ -53,6 +59,7 @@ export default defineComponent({
           messages.value.push(change.doc.data());
         });
         allMessages.value = messages.value;
+        // console.log(allMessages.value);
       });
     };
 
@@ -60,8 +67,8 @@ export default defineComponent({
 
 
     return {
- logout, saveMessages, text, loadMessages, allMessages,
- };
+      logout, saveMessages, text, loadMessages, allMessages,
+    };
   },
 });
 </script>
@@ -76,6 +83,33 @@ header {
 section {
   height: 80vh;
 }
+
+#container {
+  margin-top: 1rem ;
+  margin-left: auto;
+  margin-right: 1rem;
+  width: 40%;
+  height: 3rem;
+  background-color: rgba(102, 86, 83, 0.089);
+  border-radius: 4px;
+  position: relative;
+}
+
+.text {
+  text-align: left;
+  padding: 0.5rem 0 0 0.5rem;
+}
+
+.time {
+  text-align: right;
+  padding-right: 0.5rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.75rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
 footer {
   height: 12vh;
 }
