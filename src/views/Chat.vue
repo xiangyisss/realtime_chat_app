@@ -3,23 +3,25 @@
     <header>
       <button @click="logout">Log out</button>
     </header>
-    <section class='chat_box'>//Message
+    <section id='chat_box' >//Message
       <div id="container" v-for="message in allMessages" :key="message.id">
         <div class="text">{{message.message}}</div>
-        <div class="time">{{message.timestamp.toDate.created_at.toDate()}}</div>
+        <div class="time">{{message.timestamp}}</div>
       </div>
     </section>
     <footer>
-      <form @submit.prevent id="message_form">
+      <form @submit.prevent="saveMessages" id="message_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
-        <input type="submit" value="Send " class="send_button" id="submit" @click="saveMessages">
+        <input type="submit" value="Send " class="send_button" id="submit" >
       </form>
     </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue';
+import {
+ defineComponent, Ref, ref,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import firebase from 'firebase';
 import database from '../db';
@@ -40,34 +42,59 @@ export default defineComponent({
     const text : Ref<string> = ref('');
     const allMessages : Ref<any[]> = ref([]);
 
+    const scrollToBottom = () => {
+      const chatBox : any = document.getElementById('chat_box');
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
     const saveMessages = () => {
       database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+        // timestamp: new Date().getTime(),
+      })
 
-      console.log(database);
+      .then(() => {
+        scrollToBottom();
+        console.log('texting-1');
+      });
       text.value = '';
     };
 
     const loadMessages = () => {
-      const query : any = database.firestore().collection('messages').orderBy('timestamp', 'desc').limit(5);
-        query.onSnapshot((snapShot : any) => {
-        const messages : Ref<any[]> = ref([]);
-        snapShot.docChanges().forEach((change : any) => {
-          messages.value.push(change.doc.data());
-        });
-        allMessages.value = messages.value;
-        // console.log(allMessages.value);
+      const query : any = database.firestore().collection('messages').orderBy('timestamp', 'desc').limit(8);
+      // query.onSnapshot((snapShot : any) => {
+      //   const messages : Ref<any[]> = ref([]);
+      //   snapShot.forEach((el : any) => {
+      //     messages.value.push(el.data());
+      //   });
+      //   allMessages.value = messages.value;
+      // });
+
+      query.onSnapshot((snapShot : any) => {
+      snapShot.docChanges().forEach((change : any) => {
+        if (change.type === 'added') {
+              // console.log("New city: ", change.doc.data());
+              console.log('added', change.doc.data());
+              allMessages.value.push(change.doc.data());
+          }
+        if (change.type === 'removed') {
+              console.log('Removed', change.doc.data());
+        }
       });
+      });
+
+      setTimeout(() => {
+        scrollToBottom();
+        console.log('texting-2');
+      }, 600);
     };
 
     loadMessages();
 
-
     return {
-      logout, saveMessages, text, loadMessages, allMessages,
+      logout, saveMessages, text, loadMessages, allMessages, scrollToBottom,
     };
   },
 });
@@ -110,6 +137,14 @@ section {
   right: 0;
 }
 
+#chat_box {
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  height: 80vh;
+  scroll-behavior: smooth;
+}
+
 footer {
   height: 12vh;
 }
@@ -125,4 +160,12 @@ button, .send_button {
   padding: 0.5rem;
   outline: none;
 }
+
+/* .sent_msg {
+
+}
+
+.receive_msg {
+
+} */
 </style>
