@@ -11,7 +11,8 @@
       :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
         <div class="text">{{message.message}}</div>
         <div class="name">{{message.name}}</div>
-        <div class="time">{{`${message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}`}}</div>
+        <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
+        <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
       </div>
     </section>
     <footer>
@@ -61,7 +62,9 @@ export default defineComponent({
       database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+        // timestamp: new Date(),
       })
       .then(() => {
         scrollToBottom();
@@ -95,11 +98,41 @@ export default defineComponent({
       setTimeout(() => {
         scrollToBottom();
         console.log('texting-2');
-      }, 600);
+      }, 1000);
     };
 
+    // const dayStyle = reactive({
+    //   width: '5rem',
+    //   height: '1.75rem',
+    //   backgroundColor: 'pink',
+    //   innerHTML: 'Today',
+    // });
+
+
+
+    //   const day : Ref<object{}> = reactive({
+    //     weekday: 'long',
+    //     year: 'numeric',
+    //     month: 'long',
+    //     day: 'numeric',
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     second: '2-digit',
+    //     hour12: false,
+    //   });
+    // const days = new Date().toLocaleTimeString('en-us', day.value);
+    // console.log(days);
+    // const today = new Date();
+    //   if (date.value !== yesterday) {
+    //     dayStyle.backgroundColor = 'salmon';
+    //     dayStyle.innerHTML = 'Yesterday';
+    //   } else {
+    //     dayStyle.backgroundColor = 'black';
+    //   }
+    // };
 
     loadMessages();
+
 
     return {
       logout, saveMessages, text, loadMessages, allMessages, scrollToBottom,
@@ -195,5 +228,13 @@ button, .send_button {
   margin-left: 1rem;
   margin-right: auto;
 }
+
+.today {
+  width: 5rem;
+  height: 1.75rem;
+  background: pink;
+}
+
+
 
 </style>
