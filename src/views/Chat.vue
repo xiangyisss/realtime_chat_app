@@ -3,10 +3,15 @@
     <header>
       <button @click="logout">Log out</button>
     </header>
-    <section id='chat_box' >//Message
-      <div id="container" v-for="message in allMessages" :key="message.id">
+    <section id='chat_box' >
+      <div
+      id="container"
+      v-for="message in allMessages"
+      :key="message.id"
+      :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
         <div class="text">{{message.message}}</div>
-        <div class="time">{{message.timestamp}}</div>
+        <div class="name">{{message.name}}</div>
+        <div class="time">{{`${message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}`}}</div>
       </div>
     </section>
     <footer>
@@ -26,7 +31,11 @@ import { useRouter } from 'vue-router';
 import firebase from 'firebase';
 import database from '../db';
 
-
+// interface style {
+//   backgroundColor: string,
+//   color: string,
+//   float: string,
+// }
 
 export default defineComponent({
   props: { userName: String },
@@ -42,6 +51,7 @@ export default defineComponent({
     const text : Ref<string> = ref('');
     const allMessages : Ref<any[]> = ref([]);
 
+
     const scrollToBottom = () => {
       const chatBox : any = document.getElementById('chat_box');
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -52,9 +62,7 @@ export default defineComponent({
         name: props.userName,
         message: text.value,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        // timestamp: new Date().getTime(),
       })
-
       .then(() => {
         scrollToBottom();
         console.log('texting-1');
@@ -63,7 +71,7 @@ export default defineComponent({
     };
 
     const loadMessages = () => {
-      const query : any = database.firestore().collection('messages').orderBy('timestamp', 'desc').limit(8);
+      const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
       // query.onSnapshot((snapShot : any) => {
       //   const messages : Ref<any[]> = ref([]);
       //   snapShot.forEach((el : any) => {
@@ -75,7 +83,6 @@ export default defineComponent({
       query.onSnapshot((snapShot : any) => {
       snapShot.docChanges().forEach((change : any) => {
         if (change.type === 'added') {
-              // console.log("New city: ", change.doc.data());
               console.log('added', change.doc.data());
               allMessages.value.push(change.doc.data());
           }
@@ -90,6 +97,7 @@ export default defineComponent({
         console.log('texting-2');
       }, 600);
     };
+
 
     loadMessages();
 
@@ -112,22 +120,25 @@ section {
 }
 
 #container {
-  margin-top: 1rem ;
-  margin-left: auto;
-  margin-right: 1rem;
+  /* margin-top: 1rem ;*/
+  /* margin-left: auto;
+  margin-right: 1rem; */
+  margin-bottom: 0.75rem;
   width: 40%;
   height: 3rem;
-  background-color: rgba(102, 86, 83, 0.089);
+  /* background-color: rgba(102, 86, 83, 0.089); */
   border-radius: 4px;
   position: relative;
+
 }
 
 .text {
   text-align: left;
   padding: 0.5rem 0 0 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.time {
+.name {
   text-align: right;
   padding-right: 0.5rem;
   padding-bottom: 0.25rem;
@@ -135,6 +146,16 @@ section {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+.time {
+  text-align: left;
+  padding-left: 0.5rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.75rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 #chat_box {
@@ -146,7 +167,8 @@ section {
 }
 
 footer {
-  height: 12vh;
+  height: 8vh;
+  margin-top: 1rem;
 }
 
 button, .send_button {
@@ -161,11 +183,17 @@ button, .send_button {
   outline: none;
 }
 
-/* .sent_msg {
-
+.sentMsgStyle {
+  background-color: green;
+  color: aliceblue;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+.receiveMsgStyle {
+  background-color: brown;
+  color: white;
+  margin-left: 1rem;
+  margin-right: auto;
 }
 
-.receive_msg {
-
-} */
 </style>
