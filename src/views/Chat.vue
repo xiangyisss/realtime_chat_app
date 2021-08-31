@@ -18,6 +18,7 @@
     <footer>
       <form @submit.prevent="saveMessages" id="message_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
+        <input type="file" id="uploadImage" @click="sendImages">
         <input type="submit" value="Send " class="send_button" id="submit" >
       </form>
     </footer>
@@ -68,9 +69,28 @@ export default defineComponent({
       })
       .then(() => {
         scrollToBottom();
-        console.log('texting-1');
+        // console.log('texting-1');
       });
       text.value = '';
+    };
+
+    // const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
+
+    const sendImages = (file : any) => {
+      const matadata = {
+        contentType: 'image/jpeg',
+      };
+      const storageRef = firebase.storage().ref('messages/');
+      storageRef.put(file, matadata).then(() => {
+        console.log('Uploaded a blob or file!');
+      });
+
+      // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+      // () => {
+      //   uploadTask.snapshot.ref.getDownloadURL().then((downloadURL : any) => {
+      //     console.log('File available at', downloadURL);
+      //   });
+      // });
     };
 
     const loadMessages = () => {
@@ -86,11 +106,11 @@ export default defineComponent({
       query.onSnapshot((snapShot : any) => {
       snapShot.docChanges().forEach((change : any) => {
         if (change.type === 'added') {
-              console.log('added', change.doc.data());
+              // console.log('added', change.doc.data());
               allMessages.value.push(change.doc.data());
           }
         if (change.type === 'removed') {
-              console.log('Removed', change.doc.data());
+              // console.log('Removed', change.doc.data());
         }
       });
       });
@@ -135,7 +155,7 @@ export default defineComponent({
 
 
     return {
-      logout, saveMessages, text, loadMessages, allMessages, scrollToBottom,
+      logout, saveMessages, text, loadMessages, allMessages, scrollToBottom, sendImages,
     };
   },
 });
