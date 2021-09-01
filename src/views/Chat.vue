@@ -13,13 +13,14 @@
         <div class="name">{{message.name}}</div>
         <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
         <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
+        <!-- <img :src="image" alt=""> -->
       </div>
     </section>
     <footer>
       <form @submit.prevent="saveMessages" id="message_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
-        <input type="file" id="uploadImage" @click="sendImages">
-        <input type="submit" value="Send " class="send_button" id="submit" >
+        <input type="file" id="uploadImage"  @change="sendImages">
+        <input type="submit" value="Send " class="send_button" id="submit">
       </form>
     </footer>
   </div>
@@ -38,7 +39,6 @@ import database from '../db';
 //   color: string,
 //   float: string,
 // }
-
 export default defineComponent({
   props: { userName: String },
   name: 'Chat',
@@ -52,7 +52,8 @@ export default defineComponent({
 
     const text : Ref<string> = ref('');
     const allMessages : Ref<any[]> = ref([]);
-
+    const imageData = ref();
+    const images = ref();
 
     const scrollToBottom = () => {
       const chatBox : any = document.getElementById('chat_box');
@@ -75,20 +76,34 @@ export default defineComponent({
     };
 
     // const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
+    // const image = (event : any) => {
+    //   imageData.value = event.target.files[0].name;
+    //   console.log(imageData.value);
+    // };
 
-    const sendImages = (file : any) => {
-      const matadata = {
-        contentType: 'image/jpeg',
-      };
-      const storageRef = firebase.storage().ref('messages/');
-      storageRef.put(file, matadata).then(() => {
-        console.log('Uploaded a blob or file!');
-      });
+    const sendImages = (event : any) => {
+      // const metadata = {
+      //   contentType: 'image/jpeg',
+      // };
+      imageData.value = [event.target.files[0].name];
+      const storageRef = firebase.storage().ref(`images/${imageData.value}`).put(imageData.value);
+      // const uploadTask = storageRef.put(imageData.value);
+      console.log('testing');
+      storageRef.on('state_changed',
+        // snapshot => {
 
-      // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        // },
+        () => {
+          console.log('testing2');
+          storageRef.snapshot.ref.getDownloadURL().then((downloadURL: any) => {
+            images.value = downloadURL;
+            console.log(`Uploaded${images.value}`);
+          });
+        });
+      // uploadTask.on('state_changed',
       // () => {
-      //   uploadTask.snapshot.ref.getDownloadURL().then((downloadURL : any) => {
-      //     console.log('File available at', downloadURL);
+      //   uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+      //   console.log('File available at', downloadURL);
       //   });
       // });
     };
@@ -155,7 +170,7 @@ export default defineComponent({
 
 
     return {
-      logout, saveMessages, text, loadMessages, allMessages, scrollToBottom, sendImages,
+      logout, saveMessages, text, loadMessages, allMessages, scrollToBottom, sendImages, images,
     };
   },
 });
@@ -255,6 +270,9 @@ button, .send_button {
   background: pink;
 }
 
-
+img {
+  width: 100px;
+  height: 100px;
+}
 
 </style>
