@@ -13,7 +13,7 @@
         <div class="name">{{message.name}}</div>
         <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
         <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
-        <!-- <img :src="image" alt=""> -->
+        <!-- <img :src="images" alt=""> -->
       </div>
     </section>
     <footer>
@@ -75,38 +75,22 @@ export default defineComponent({
       text.value = '';
     };
 
-    // const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
-    // const image = (event : any) => {
-    //   imageData.value = event.target.files[0].name;
-    //   console.log(imageData.value);
-    // };
-
     const sendImages = (event : any) => {
-      // const metadata = {
-      //   contentType: 'image/jpeg',
-      // };
-      imageData.value = [event.target.files[0].name];
-      const storageRef = firebase.storage().ref(`images/${imageData.value}`).put(imageData.value);
-      // const uploadTask = storageRef.put(imageData.value);
-      console.log('testing');
-      storageRef.on('state_changed',
-        // snapshot => {
-
-        // },
-        () => {
-          console.log('testing2');
-          storageRef.snapshot.ref.getDownloadURL().then((downloadURL: any) => {
+      const metadata = {
+        contentType: `${event.target.files[0].type}`,
+      };
+      imageData.value = event.target.files;
+      console.log('imageData', imageData.value[0]);
+      const storageRef = firebase.storage().ref(`images/${imageData.value[0].name}`);
+      storageRef.put(imageData.value[0], metadata)
+        .then(() => {
+          storageRef.getDownloadURL().then((downloadURL) => {
+            console.log('Url is :', downloadURL);
             images.value = downloadURL;
-            console.log(`Uploaded${images.value}`);
           });
-        });
-      // uploadTask.on('state_changed',
-      // () => {
-      //   uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-      //   console.log('File available at', downloadURL);
-      //   });
-      // });
+      });
     };
+
 
     const loadMessages = () => {
       const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
@@ -132,7 +116,7 @@ export default defineComponent({
 
       setTimeout(() => {
         scrollToBottom();
-        console.log('texting-2');
+        // console.log('texting-2');
       }, 1000);
     };
 
@@ -276,3 +260,7 @@ img {
 }
 
 </style>
+
+function uuidv4() {
+  throw new Error('Function not implemented.');
+}
