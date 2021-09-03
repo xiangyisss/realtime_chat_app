@@ -13,8 +13,8 @@
         <div class="name">{{message.name}}</div>
         <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
         <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
-        <!-- <img :src="images" alt=""> -->
       </div>
+        <img :src="images" alt="photo" >
     </section>
     <footer>
       <form @submit.prevent="saveMessages" id="message_form">
@@ -51,9 +51,11 @@ export default defineComponent({
     };
 
     const text : Ref<string> = ref('');
-    const allMessages : Ref<any[]> = ref([]);
+    const allMessages : Ref<string[]> = ref([]);
     const imageData = ref();
-    const images = ref();
+    const images :Ref<any[]> = ref([]);
+    // let show = false;
+
 
     const scrollToBottom = () => {
       const chatBox : any = document.getElementById('chat_box');
@@ -64,6 +66,7 @@ export default defineComponent({
       database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
+        imageUrl: '',
         // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
         // timestamp: new Date(),
@@ -75,21 +78,37 @@ export default defineComponent({
       text.value = '';
     };
 
+    // const checkIfExistance = () => {
+    //   show = !show;
+    // };
+
     const sendImages = (event : any) => {
-      const metadata = {
-        contentType: `${event.target.files[0].type}`,
-      };
-      imageData.value = event.target.files;
-      console.log('imageData', imageData.value[0]);
-      const storageRef = firebase.storage().ref(`images/${imageData.value[0].name}`);
-      storageRef.put(imageData.value[0], metadata)
-        .then(() => {
-          storageRef.getDownloadURL().then((downloadURL) => {
-            console.log('Url is :', downloadURL);
-            images.value = downloadURL;
-          });
+      database.firestore().collection('messages').add({
+        name: props.userName,
+        message: text.value,
+        imageUrl: '',
+        timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+        // timestamp: new Date(),
+      })
+      .then((messageRef) => {
+        const metadata = {
+          contentType: `${event.target.files[0].type}`,
+        };
+        imageData.value = event.target.files;
+        console.log('imageData', imageData.value[0]);
+        const storageRef = firebase.storage().ref(`images/${imageData.value[0].name}`);
+        storageRef.put(imageData.value[0], metadata)
+          .then(() => {
+            storageRef.getDownloadURL().then((downloadURL) => {
+              images.value = downloadURL;
+              messageRef.update({
+                imageUrl: downloadURL,
+              });
+            });
+        });
       });
     };
+
 
 
     const loadMessages = () => {
@@ -260,7 +279,3 @@ img {
 }
 
 </style>
-
-function uuidv4() {
-  throw new Error('Function not implemented.');
-}
