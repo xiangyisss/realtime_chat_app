@@ -17,10 +17,13 @@
         <img :src="images" alt="photo" >
     </section>
     <footer>
-      <form @submit.prevent="saveMessages" id="message_form">
+      <form @submit.prevent="sendMessages" id="message_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
-        <input type="file" id="uploadImage"  @change="sendImages">
         <input type="submit" value="Send " class="send_button" id="submit">
+      </form>
+      <form @submit.prevent>
+        <input type="file" id="uploadImage"  @change="sendImages" >
+        <button >Button</button>
       </form>
     </footer>
   </div>
@@ -62,118 +65,88 @@ export default defineComponent({
       chatBox.scrollTop = chatBox.scrollHeight;
     };
 
-    const saveMessages = () => {
+
+    const sendMessages = () => {
       database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
         imageUrl: '',
-        // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-        // timestamp: new Date(),
       })
       .then(() => {
         scrollToBottom();
-        // console.log('texting-1');
       });
       text.value = '';
     };
 
-    // const checkIfExistance = () => {
-    //   show = !show;
-    // };
 
-    const sendImages = (event : any) => {
-      database.firestore().collection('messages').add({
-        name: props.userName,
-        message: text.value,
-        imageUrl: '',
-        timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-        // timestamp: new Date(),
-      })
-      .then((messageRef) => {
-        const metadata = {
-          contentType: `${event.target.files[0].type}`,
-        };
-        imageData.value = event.target.files;
-        console.log('imageData', imageData.value[0]);
-        const storageRef = firebase.storage().ref(`images/${imageData.value[0].name}`);
-        storageRef.put(imageData.value[0], metadata)
-          .then(() => {
-            storageRef.getDownloadURL().then((downloadURL) => {
-              images.value = downloadURL;
-              messageRef.update({
-                imageUrl: downloadURL,
-              });
-            });
+    const addImagesToDatabase = () => database.firestore().collection('messages').add({
+          name: props.userName,
+          message: text.value,
+          imageUrl: '',
+          timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+          // timestamp: new Date(),
+        });
+
+
+    const getImagesUrl = (storageRef : any, messageRef : any) => {
+      storageRef.getDownloadURL().then((downloadURL: any) => {
+        images.value = downloadURL;
+        messageRef.update({
+          imageUrl: downloadURL,
         });
       });
     };
 
 
+    const uploadImagesToStorage = (event : any, messageRef : any) => {
+      const metadata = {
+        contentType: `${event.target.files[0].type}`,
+      };
+      const storageRef = firebase.storage().ref(`images/${imageData.value[0].name}`);
+      return storageRef.put(imageData.value[0], metadata)
+        .then(() => {
+          getImagesUrl(storageRef, messageRef);
+          scrollToBottom();
+        });
+    };
+
+
+    const sendImages = (event : any) => {
+      imageData.value = event.target.files;
+      if (!imageData.value[0].type.match('image.*')) {
+        return console.log('Only can upload images');
+      }
+      return addImagesToDatabase()
+      .then((messageRef) => {
+        uploadImagesToStorage(event, messageRef);
+      });
+    };
+
 
     const loadMessages = () => {
       const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
-      // query.onSnapshot((snapShot : any) => {
-      //   const messages : Ref<any[]> = ref([]);
-      //   snapShot.forEach((el : any) => {
-      //     messages.value.push(el.data());
-      //   });
-      //   allMessages.value = messages.value;
-      // });
-
       query.onSnapshot((snapShot : any) => {
       snapShot.docChanges().forEach((change : any) => {
         if (change.type === 'added') {
-              // console.log('added', change.doc.data());
-              allMessages.value.push(change.doc.data());
-          }
+          allMessages.value.push(change.doc.data());
+        }
         if (change.type === 'removed') {
-              // console.log('Removed', change.doc.data());
+          console.log('Removed', change.doc.data());
         }
       });
       });
-
       setTimeout(() => {
         scrollToBottom();
         // console.log('texting-2');
-      }, 1000);
+      }, 700);
     };
-
-    // const dayStyle = reactive({
-    //   width: '5rem',
-    //   height: '1.75rem',
-    //   backgroundColor: 'pink',
-    //   innerHTML: 'Today',
-    // });
-
-
-
-    //   const day : Ref<object{}> = reactive({
-    //     weekday: 'long',
-    //     year: 'numeric',
-    //     month: 'long',
-    //     day: 'numeric',
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     second: '2-digit',
-    //     hour12: false,
-    //   });
-    // const days = new Date().toLocaleTimeString('en-us', day.value);
-    // console.log(days);
-    // const today = new Date();
-    //   if (date.value !== yesterday) {
-    //     dayStyle.backgroundColor = 'salmon';
-    //     dayStyle.innerHTML = 'Yesterday';
-    //   } else {
-    //     dayStyle.backgroundColor = 'black';
-    //   }
-    // };
 
     loadMessages();
 
 
-    return {
-      logout, saveMessages, text, loadMessages, allMessages, scrollToBottom, sendImages, images,
+return {
+      logout, sendMessages, text, loadMessages, allMessages, scrollToBottom, sendImages, images,
     };
   },
 });
