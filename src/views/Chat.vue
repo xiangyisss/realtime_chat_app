@@ -3,26 +3,39 @@
     <header>
       <button @click="logout">Log out</button>
     </header>
+
     <section id='chat_box' >
+      <div >
       <div
-      id="container"
+      id="messages_container"
       v-for="message in allMessages"
       :key="message.id"
       :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
-        <div class="text">{{message.message}}</div>
+        <div v-if="message.type === 'text'" class="text" >{{message.message}}</div>
+        <div v-else id="images_container" >
+          <img :src="message.imageUrl" alt="photo" @load="scrollToBottom">
+        </div>
         <div class="name">{{message.name}}</div>
         <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
         <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
       </div>
-        <img :src="images" alt="photo" >
+      </div>
+
+      <!-- <div  id="images_container">
+        <div v-for="image in allMessages" :key="image.id">
+          <img :src="image.imageUrl" alt="photo" @load="scrollToBottom">
+        </div>
+      </div> -->
+
     </section>
+
     <footer>
-      <form @submit.prevent="sendMessages" id="message_form">
+      <form @submit.prevent="sendMessagesToCloud" id="message_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
         <input type="submit" value="Send " class="send_button" id="submit">
       </form>
       <form @submit.prevent>
-        <input type="file" id="uploadImage"  @change="sendImages" >
+        <input type="file" id="uploadImage"  @change="uploadImagesToStorage" >
         <button >Button</button>
       </form>
     </footer>
@@ -56,8 +69,7 @@ export default defineComponent({
     const text : Ref<string> = ref('');
     const allMessages : Ref<string[]> = ref([]);
     const imageData = ref();
-    const images :Ref<any[]> = ref([]);
-    // let show = false;
+    const images :Ref<string> = ref('');
 
 
     const scrollToBottom = () => {
@@ -66,11 +78,11 @@ export default defineComponent({
     };
 
 
-    const sendMessages = () => {
+    const sendMessagesToCloud = () => {
       database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
-        imageUrl: '',
+        type: 'text',
         timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
       })
       .then(() => {
@@ -79,49 +91,51 @@ export default defineComponent({
       text.value = '';
     };
 
-
-    const addImagesToDatabase = () => database.firestore().collection('messages').add({
-          name: props.userName,
-          message: text.value,
-          imageUrl: '',
-          timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-          // timestamp: new Date(),
-        });
-
-
-    const getImagesUrl = (storageRef : any, messageRef : any) => {
-      storageRef.getDownloadURL().then((downloadURL: any) => {
-        images.value = downloadURL;
-        messageRef.update({
-          imageUrl: downloadURL,
-        });
-      });
-    };
-
-
-    const uploadImagesToStorage = (event : any, messageRef : any) => {
-      const metadata = {
-        contentType: `${event.target.files[0].type}`,
-      };
-      const storageRef = firebase.storage().ref(`images/${imageData.value[0].name}`);
-      return storageRef.put(imageData.value[0], metadata)
-        .then(() => {
-          getImagesUrl(storageRef, messageRef);
-          scrollToBottom();
-        });
-    };
-
-
-    const sendImages = (event : any) => {
+    const sendOnlyImages = (event : any) => {
       imageData.value = event.target.files;
       if (!imageData.value[0].type.match('image.*')) {
         return console.log('Only can upload images');
       }
-      return addImagesToDatabase()
-      .then((messageRef) => {
-        uploadImagesToStorage(event, messageRef);
+      return true;
+    };
+
+    // const addImagesToDatabase = () => database.firestore().collection('messages').add({
+    //       name: props.userName,
+    //       imageUrl: images.value,
+    //       type: 'image',
+    //       timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+    //     });
+
+
+    const getImagesUrl = (storageRef : any) => {
+       storageRef.getDownloadURL().then((downloadURL: any) => {
+        database.firestore().collection('messages').add({
+          name: props.userName,
+          imageUrl: downloadURL,
+          type: 'image',
+          timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+        });
       });
     };
+
+
+    const uploadImagesToStorage = (event : any) => {
+      imageData.value = event.target.files;
+      sendOnlyImages(event);
+      const metadata = {
+        contentType: `${event.target.files[0].type}`,
+      };
+      // Get random number
+      const Uid = Math.random().toString(16).slice(2);
+      console.log(Uid);
+      const storageRef = firebase.storage().ref(`images/${Uid + imageData.value[0].name}`);
+      return storageRef.put(imageData.value[0], metadata)
+        .then(() => {
+          getImagesUrl(storageRef);
+        });
+    };
+
+
 
 
     const loadMessages = () => {
@@ -142,11 +156,12 @@ export default defineComponent({
       }, 700);
     };
 
+
     loadMessages();
 
 
-return {
-      logout, sendMessages, text, loadMessages, allMessages, scrollToBottom, sendImages, images,
+    return {
+      logout, sendMessagesToCloud, text, loadMessages, allMessages, scrollToBottom, uploadImagesToStorage, images,
     };
   },
 });
@@ -163,13 +178,14 @@ section {
   height: 80vh;
 }
 
-#container {
+#messages_container {
   /* margin-top: 1rem ;*/
   /* margin-left: auto;
   margin-right: 1rem; */
   margin-bottom: 0.75rem;
   width: 40%;
-  height: 3rem;
+  height: auto;
+  min-height: 3rem;
   /* background-color: rgba(102, 86, 83, 0.089); */
   border-radius: 4px;
   position: relative;
@@ -237,6 +253,7 @@ button, .send_button {
   background-color: brown;
   color: white;
   margin-left: 1rem;
+  height: 300px;
   margin-right: auto;
 }
 
@@ -246,7 +263,7 @@ button, .send_button {
   background: pink;
 }
 
-img {
+img, #images_container {
   width: 100px;
   height: 100px;
 }
