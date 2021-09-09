@@ -1,11 +1,10 @@
 <template>
-  <div class='chat'>
+  <div id='chat'>
     <header>
       <button @click="logout">Log out</button>
     </header>
 
     <section id='chat_box' >
-      <div >
       <div
       id="messages_container"
       v-for="message in allMessages"
@@ -19,26 +18,18 @@
         <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
         <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
       </div>
-      </div>
-
-      <!-- <div  id="images_container">
-        <div v-for="image in allMessages" :key="image.id">
-          <img :src="image.imageUrl" alt="photo" @load="scrollToBottom">
-        </div>
-      </div> -->
-
     </section>
 
     <footer>
-      <form @submit.prevent="sendMessagesToCloud" id="message_form">
+      <form @submit.prevent="saveMessagesToDatabase" id="messages_form">
         <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
         <input type="submit" value="Send " class="send_button" id="submit">
       </form>
-      <form @submit.prevent>
-        <input type="file" id="uploadImage"  @change="uploadImagesToStorage" >
-        <button >Button</button>
+      <form @submit.prevent id="images_form" >
+        <input type="file" id="uploadImage" accept="image/*" @change="UploadImages" >
       </form>
     </footer>
+
   </div>
 </template>
 
@@ -68,8 +59,6 @@ export default defineComponent({
 
     const text : Ref<string> = ref('');
     const allMessages : Ref<string[]> = ref([]);
-    const imageData = ref();
-    const images :Ref<string> = ref('');
 
 
     const scrollToBottom = () => {
@@ -78,7 +67,7 @@ export default defineComponent({
     };
 
 
-    const sendMessagesToCloud = () => {
+    const saveMessagesToDatabase = () => {
       database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
@@ -91,13 +80,13 @@ export default defineComponent({
       text.value = '';
     };
 
-    const sendOnlyImages = (event : any) => {
-      imageData.value = event.target.files;
-      if (!imageData.value[0].type.match('image.*')) {
-        return console.log('Only can upload images');
-      }
-      return true;
-    };
+    // const checkUploadFileType = (event : any) => {
+    //   imageData.value = event.target.files;
+    //   if (!imageData.value[0].type.match('image.*')) {
+    //     return console.log('Only can upload images');
+    //   }
+    //   return true;
+    // };
 
     // const addImagesToDatabase = () => database.firestore().collection('messages').add({
     //       name: props.userName,
@@ -107,8 +96,8 @@ export default defineComponent({
     //     });
 
 
-    const getImagesUrl = (storageRef : any) => {
-       storageRef.getDownloadURL().then((downloadURL: any) => {
+    const getImagesUrlToDatabase = (storageRef : any) => {
+      storageRef.getDownloadURL().then((downloadURL: any) => {
         database.firestore().collection('messages').add({
           name: props.userName,
           imageUrl: downloadURL,
@@ -119,26 +108,48 @@ export default defineComponent({
     };
 
 
-    const uploadImagesToStorage = (event : any) => {
-      imageData.value = event.target.files;
-      sendOnlyImages(event);
+    const saveImagesToStorage = (event : any) => {
+      const imageData = event.target.files[0];
+      // checkUploadFileType(event);
       const metadata = {
         contentType: `${event.target.files[0].type}`,
       };
       // Get random number
       const Uid = Math.random().toString(16).slice(2);
-      console.log(Uid);
-      const storageRef = firebase.storage().ref(`images/${Uid + imageData.value[0].name}`);
-      return storageRef.put(imageData.value[0], metadata)
+      const storageRef = firebase.storage().ref(`images/${Uid + imageData.name}`);
+      return storageRef.put(imageData, metadata)
         .then(() => {
-          getImagesUrl(storageRef);
+          getImagesUrlToDatabase(storageRef);
         });
     };
 
 
+    const checkImagesType = (event : any) => {
+      const testFile = event.target.files[0].type;
+      if (!testFile.match('image.*')) {
+        return console.log('Only can upload images');
+      }
+      return true;
+    };
 
 
-    const loadMessages = () => {
+    const resetImagesInputValue = () => {
+      const input = document.getElementsByTagName('input')[2];
+      input.value = null!;
+      console.log('input Value: ', input);
+    };
+
+
+
+    const UploadImages = (event : any) => {
+      checkImagesType(event);
+      saveImagesToStorage(event);
+      resetImagesInputValue();
+      return true;
+    };
+
+
+    const loadAllMessages = () => {
       const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
       query.onSnapshot((snapShot : any) => {
       snapShot.docChanges().forEach((change : any) => {
@@ -157,11 +168,11 @@ export default defineComponent({
     };
 
 
-    loadMessages();
+    loadAllMessages();
 
 
     return {
-      logout, sendMessagesToCloud, text, loadMessages, allMessages, scrollToBottom, uploadImagesToStorage, images,
+      logout, saveMessagesToDatabase, text, allMessages, scrollToBottom, UploadImages,
     };
   },
 });
