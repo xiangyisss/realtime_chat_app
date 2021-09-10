@@ -22,12 +22,21 @@
 
     <footer>
       <form @submit.prevent="saveMessagesToDatabase" id="messages_form">
-        <input type="text" placeholder="Write a message..." class="type_message" id="message" v-model="text">
-        <input type="submit" value="Send " class="send_button" id="submit">
+        <input type="text" placeholder="Type your message..." class="type_message" id="message" v-model="text">
+        <!-- <input type="submit" value="Send " class="send_button" id="submit"> -->
+        <div id="image_icon">
+          <form @submit.prevent id="images_form" >
+            <input type="file" id="uploadImages" accept="image/*" @change="UploadImages" >
+          </form>
+        </div>
+        <div id="emoji_icon" @click="openEmoji">
+          <img src="../assets/smile.svg" alt="" >
+        </div>
       </form>
-      <form @submit.prevent id="images_form" >
-        <input type="file" id="uploadImage" accept="image/*" @change="UploadImages" >
-      </form>
+      <div  v-if="show" >
+        <emoji/>
+      </div>
+
     </footer>
 
   </div>
@@ -40,6 +49,7 @@ import {
 import { useRouter } from 'vue-router';
 import firebase from 'firebase';
 import database from '../db';
+import Emoji from '@/components/Emoji.vue';
 
 // interface style {
 //   backgroundColor: string,
@@ -47,6 +57,7 @@ import database from '../db';
 //   float: string,
 // }
 export default defineComponent({
+  components: { Emoji },
   props: { userName: String },
   name: 'Chat',
   setup(props) {
@@ -59,6 +70,11 @@ export default defineComponent({
 
     const text : Ref<string> = ref('');
     const allMessages : Ref<string[]> = ref([]);
+    const show = ref();
+
+    const openEmoji = () => {
+          show.value = !show.value;
+    };
 
 
     const scrollToBottom = () => {
@@ -172,13 +188,16 @@ export default defineComponent({
 
 
     return {
-      logout, saveMessagesToDatabase, text, allMessages, scrollToBottom, UploadImages,
+      logout, saveMessagesToDatabase, text, allMessages, scrollToBottom, UploadImages, openEmoji, show,
     };
   },
 });
 </script>
 
 <style scoped>
+.hide {
+  display: none;
+}
 header {
   height: 8vh;
   display: flex;
@@ -249,7 +268,7 @@ button, .send_button {
 }
 
 .type_message {
-  width: 80%;
+  width: 60%;
   padding: 0.5rem;
   outline: none;
 }
@@ -279,4 +298,24 @@ img, #images_container {
   height: 100px;
 }
 
+#uploadImages {
+  color: rgba(0, 0, 0, 0);
+  width: 100px;
+}
+
+#emoji_icon,  #emoji_icon img {
+  width: 20px;
+  height: 20px;
+}
+
+ #emoji_icon img {
+   cursor: pointer;
+ }
+
+#messages_form {
+  width: 80%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 </style>

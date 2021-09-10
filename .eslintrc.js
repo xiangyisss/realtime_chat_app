@@ -18,13 +18,11 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
-    // 'no-multiple-empty-lines': [2, {"max": 99999, "maxEOF": 0}],
     'max-len': 'off',
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "no-multiple-empty-lines": [2, {"max": 99999, "maxEOF": 0}],
-    // "vue/script-indent": ["error",4,{"baseIndent": 1}],
-    'indent': 'off'
+    'indent': 'off',
   },
 };
 
