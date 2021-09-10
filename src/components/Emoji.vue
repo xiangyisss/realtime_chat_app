@@ -1,20 +1,24 @@
 <template>
-    <VuemojiPicker @emojiClick="handleEmojiClick" />
+    <input type="text" v-model="eventDetail">
+    <VuemojiPicker @emojiClick="onEmojiClick" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import { VuemojiPicker, EmojiClickEventDetail } from 'vuemoji-picker';
 
 export default defineComponent({
     name: 'Emoji',
     components: { VuemojiPicker },
     setup() {
-        const handleEmojiClick = (detail: EmojiClickEventDetail) => {
-            console.log(detail.unicode);
+        const eventDetail : Ref<string> = ref('');
+
+        const onEmojiClick = (detail: EmojiClickEventDetail) => {
+            const emojis = detail.unicode!;
+            eventDetail.value += emojis;
         };
 
-        return { handleEmojiClick };
+        return { onEmojiClick, eventDetail };
     },
 
     });

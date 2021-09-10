@@ -195,9 +195,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.hide {
-  display: none;
-}
 header {
   height: 8vh;
   display: flex;
