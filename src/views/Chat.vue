@@ -1,10 +1,16 @@
 <template>
-  <div id='chat'>
-    <header>
+  <div id='chat_container'>
+    <header class="item_a">
       <button @click="logout">Log out</button>
+      <button @click="createNewRoom">Creat new room</button>
     </header>
 
-    <section id='chat_box' >
+    <aside class="item_b">
+      <div class="chatroom group_chat">Group Chat</div>
+      <div class="chatroom rebecca">Rebecca</div>
+      <div class="chatroom pedro">Pedro</div>
+    </aside>
+    <section id='chat_box' class="item_c">
       <div
       id="messages_container"
       v-for="message in allMessages"
@@ -20,12 +26,15 @@
       </div>
     </section>
 
-    <footer>
+    <footer class="item_d">
       <form @submit.prevent="saveMessagesToDatabase" id="messages_form">
         <input type="text" placeholder="Type your message..." class="type_message" id="message" v-model="text">
-        <!-- <input type="submit" value="Send " class="send_button" id="submit"> -->
+        <button id="send_text"></button>
         <div id="image_icon">
           <form @submit.prevent id="images_form" >
+            <label for="uploadImages">
+              <img src="../assets/link.png" alt="">
+            </label>
             <input type="file" id="uploadImages" accept="image/*" @change="UploadImages" >
           </form>
         </div>
@@ -71,6 +80,16 @@ export default defineComponent({
     const text : Ref<string> = ref('');
     const allMessages : Ref<string[]> = ref([]);
     const show = ref();
+
+    const messageRef = database.firestore().collection('rooms').doc('roomA');
+    const createNewRoom = () => {
+      messageRef.collection('testing').add({
+        name: props.userName,
+        message: text.value,
+        type: 'text',
+        timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+      });
+    };
 
     const appendEmojiToText = (emojis : any) => {
       text.value += emojis;
@@ -192,18 +211,88 @@ export default defineComponent({
 
 
     return {
-      logout, saveMessagesToDatabase, text, allMessages, scrollToBottom, UploadImages, openEmoji, show, appendEmojiToText,
+      logout,
+      saveMessagesToDatabase,
+      text,
+      allMessages,
+      scrollToBottom,
+      UploadImages,
+      openEmoji,
+      show,
+      appendEmojiToText,
+      createNewRoom,
     };
   },
 });
 </script>
 
 <style scoped>
+.chatroom {
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  padding-left: 50px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.group_chat {
+  background: aqua;
+  cursor: default !important;
+}
+
+#send_text {
+  background-image: url('../assets/send.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+#uploadImages {
+  display: none;
+}
+#images_form label img{
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.item_a {
+  grid-area: header;
+}
+.item_b {
+  grid-area: aside;
+}
+.item_c {
+  grid-area: section;
+}
+.item_d {
+  grid-area: footer;
+}
+#chat_container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  grid-template-areas:
+  'header header header header'
+  'aside section section section'
+  'footer footer footer footer'
+  ;
+}
 header {
   height: 8vh;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+aside {
+  border-right: 1px solid grey;
 }
 section {
   height: 80vh;
@@ -260,6 +349,8 @@ section {
 footer {
   height: 8vh;
   margin-top: 1rem;
+  display: flex;
+  justify-content: end;
 }
 
 button, .send_button {
@@ -299,10 +390,10 @@ img, #images_container {
   height: 100px;
 }
 
-#uploadImages {
+/* #uploadImages {
   color: rgba(0, 0, 0, 0);
   width: 100px;
-}
+} */
 
 #emoji_icon,  #emoji_icon img {
   width: 20px;
