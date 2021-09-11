@@ -1,5 +1,4 @@
 <template>
-    <input type="text" v-model="eventDetail">
     <VuemojiPicker @emojiClick="onEmojiClick" />
 </template>
 
@@ -10,12 +9,12 @@ import { VuemojiPicker, EmojiClickEventDetail } from 'vuemoji-picker';
 export default defineComponent({
     name: 'Emoji',
     components: { VuemojiPicker },
-    setup() {
+    setup(props, { emit }) {
         const eventDetail : Ref<string> = ref('');
 
         const onEmojiClick = (detail: EmojiClickEventDetail) => {
             const emojis = detail.unicode!;
-            eventDetail.value += emojis;
+            emit('onEmojiClick', emojis);
         };
 
         return { onEmojiClick, eventDetail };

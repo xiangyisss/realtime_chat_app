@@ -34,7 +34,7 @@
         </div>
       </form>
       <div  v-if="show" >
-        <emoji/>
+        <emoji @onEmojiClick = appendEmojiToText />
       </div>
 
     </footer>
@@ -71,6 +71,10 @@ export default defineComponent({
     const text : Ref<string> = ref('');
     const allMessages : Ref<string[]> = ref([]);
     const show = ref();
+
+    const appendEmojiToText = (emojis : any) => {
+      text.value += emojis;
+    };
 
     const openEmoji = () => {
           show.value = !show.value;
@@ -188,7 +192,7 @@ export default defineComponent({
 
 
     return {
-      logout, saveMessagesToDatabase, text, allMessages, scrollToBottom, UploadImages, openEmoji, show,
+      logout, saveMessagesToDatabase, text, allMessages, scrollToBottom, UploadImages, openEmoji, show, appendEmojiToText,
     };
   },
 });
