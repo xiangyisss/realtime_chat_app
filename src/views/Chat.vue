@@ -1,21 +1,21 @@
 <template>
   <div id='chat_container'>
     <header class="item_a">
-      <button @click="logout">Log out</button>
-      <button @click="createNewRoom">Creat new room</button>
+
+      <button @click="logout" type="button" class="btn btn-outline-primary">Log out</button>
     </header>
 
     <aside class="item_b">
-      <div class="chatroom group_chat">Group Chat</div>
-      <div class="chatroom rebecca">Rebecca</div>
-      <div class="chatroom pedro">Pedro</div>
+      <div>Group chat</div>
     </aside>
+
     <section id='chat_box' class="item_c">
       <div
       id="messages_container"
       v-for="message in allMessages"
       :key="message.id"
-      :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
+      >
+      <!-- :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'" -->
         <div v-if="message.type === 'text'" class="text" >{{message.message}}</div>
         <div v-else id="images_container" >
           <img :src="message.imageUrl" alt="photo" @load="scrollToBottom">
@@ -27,19 +27,21 @@
     </section>
 
     <footer class="item_d">
-      <form @submit.prevent="saveMessagesToDatabase" id="messages_form">
-        <input type="text" placeholder="Type your message..." class="type_message" id="message" v-model="text">
-        <button id="send_text"></button>
+      <form @submit.prevent="saveMessagesToDatabase" id="messages_form" autocomplete="off">
+        <input type="text" placeholder="Aa" class="type_message" id="message" v-model="text">
+        <button id="send_text"><i class="bi bi-chat"></i></button>
         <div id="image_icon">
           <form @submit.prevent id="images_form" >
             <label for="uploadImages">
-              <img src="../assets/link.png" alt="">
+              <!-- <img src="../assets/link.png" alt=""> -->
+              <i class="bi bi-images"></i>
             </label>
             <input type="file" id="uploadImages" accept="image/*" @change="UploadImages" >
           </form>
         </div>
         <div id="emoji_icon" @click="openEmoji">
-          <img src="../assets/smile.svg" alt="" >
+          <!-- <img src="../assets/smile.svg" alt="" > -->
+          <i class="bi bi-emoji-smile"></i>
         </div>
       </form>
       <div  v-if="show" >
@@ -80,10 +82,11 @@ export default defineComponent({
     const text : Ref<string> = ref('');
     const allMessages : Ref<string[]> = ref([]);
     const show = ref();
+    const newRoom = ref('');
 
-    const messageRef = database.firestore().collection('rooms').doc('roomA');
-    const createNewRoom = () => {
-      messageRef.collection('testing').add({
+    // const messageRef = database.firestore().collection('newrooms').doc(`${newRoom.value}`);
+    const rebeccaChat = () => {
+      database.firestore().collection('rebeccca').add({
         name: props.userName,
         message: text.value,
         type: 'text',
@@ -118,21 +121,6 @@ export default defineComponent({
       });
       text.value = '';
     };
-
-    // const checkUploadFileType = (event : any) => {
-    //   imageData.value = event.target.files;
-    //   if (!imageData.value[0].type.match('image.*')) {
-    //     return console.log('Only can upload images');
-    //   }
-    //   return true;
-    // };
-
-    // const addImagesToDatabase = () => database.firestore().collection('messages').add({
-    //       name: props.userName,
-    //       imageUrl: images.value,
-    //       type: 'image',
-    //       timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-    //     });
 
 
     const getImagesUrlToDatabase = (storageRef : any) => {
@@ -220,13 +208,17 @@ export default defineComponent({
       openEmoji,
       show,
       appendEmojiToText,
-      createNewRoom,
+      rebeccaChat,
+      newRoom,
     };
   },
 });
 </script>
 
 <style scoped>
+i {
+  cursor: pointer;
+}
 .chatroom {
   width: 200px;
   height: 30px;
@@ -244,14 +236,16 @@ export default defineComponent({
 }
 
 #send_text {
-  background-image: url('../assets/send.png');
+  /* background-image: url('../assets/send.png');
   background-position: center;
   background-repeat: no-repeat;
   width: 24px;
-  height: 24px;
+  height: 24px; */
   outline: none;
   border: none;
   cursor: pointer;
+  background: none;
+  /* pointer-events: none; */
 }
 
 #uploadImages {

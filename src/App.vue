@@ -3,8 +3,19 @@
     <router-link to="/" ></router-link>
     <router-link to="/chat_page"></router-link>
   </div> -->
+  <!-- <side-nav /> -->
   <router-view/>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+// import SideNav from './components/SideNav.vue';
+
+export default defineComponent({
+  components: {},
+
+});
+</script>
 
 <style>
 * {

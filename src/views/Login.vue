@@ -1,5 +1,17 @@
 <template>
+
   <div class='login'>
+    <div class="avatar">
+      <button @click="before">-</button>
+      <!-- <div><img src="../assets/boy.png" alt="avatar"></div>
+      <div><img src="../assets/man.png" alt="avatar"></div>
+      <div><img src="../assets/girl.png" alt="avatar"></div>
+      <div><img src="../assets/woman.png" alt="avatar"></div> -->
+      <div v-for="i in [currentIndex]" :key="i" id="avatar">
+        <img :src="currentImg" alt="" />
+      </div>
+      <button @click="next">+</button>
+    </div>
     <form @submit.prevent='login'>
       <label for="">User name</label>
       <input type="text" placeholder='Enter your user name' v-model='inputUserName' required>
@@ -13,6 +25,7 @@ import {
   defineComponent, ref, Ref,
 } from 'vue';
 import { useRouter } from 'vue-router';
+
 
 // interface data {
 //   userName: string,
@@ -42,10 +55,39 @@ export default defineComponent({
 
     */
 
+
+    const images = [
+        'https://cdn-icons-png.flaticon.com/512/3135/3135789.png',
+        'https://cdn-icons-png.flaticon.com/512/194/194932.png',
+        'https://cdn-icons-png.flaticon.com/512/147/147140.png',
+        'https://cdn-icons-png.flaticon.com/512/194/194938.png',
+        'https://cdn-icons-png.flaticon.com/512/147/147144.png',
+        'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+    ];
+    let currentIndex = 0;
+    const currentImg = ref();
+    const currentImage = () => {
+      currentImg.value = images[Math.abs(currentIndex) % images.length];
+      console.log('running-1', currentImg);
+    };
+    currentImage();
+    const next = () => {
+       currentIndex += 1;
+      currentImage();
+    };
+    const before = () => {
+      currentIndex -= 1;
+      currentImage();
+    };
+
+
+
+
+
     const login = () => {
       if (inputUserName.value) {
         router.push({
-          name: 'Chat',
+          name: 'groupchat',
           params: { userName: inputUserName.value },
         });
         // state.userName = inputUserName.value;
@@ -55,6 +97,13 @@ export default defineComponent({
     return {
       inputUserName,
       login,
+      before,
+      next,
+      currentImage,
+      currentIndex,
+      images,
+      currentImg,
+
       // state,
 
     };
@@ -63,11 +112,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#avatar,  #avatar img{
+  width: 50px;
+  height: 50px;
+}
 .login {
   width: 100%;
   height: 100vh;
   background-color: tomato;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
