@@ -2,15 +2,11 @@
 
   <div class='login'>
     <div class="avatar">
-      <button @click="before">-</button>
-      <!-- <div><img src="../assets/boy.png" alt="avatar"></div>
-      <div><img src="../assets/man.png" alt="avatar"></div>
-      <div><img src="../assets/girl.png" alt="avatar"></div>
-      <div><img src="../assets/woman.png" alt="avatar"></div> -->
+      <button @click="before"><i class="bi bi-chevron-left"></i></button>
       <div v-for="i in [currentIndex]" :key="i" id="avatar">
         <img :src="currentImg" alt="" />
       </div>
-      <button @click="next">+</button>
+      <button @click="next"><i class="bi bi-chevron-right"></i></button>
     </div>
     <form @submit.prevent='login'>
       <label for="">User name</label>
@@ -68,7 +64,6 @@ export default defineComponent({
     const currentImg = ref();
     const currentImage = () => {
       currentImg.value = images[Math.abs(currentIndex) % images.length];
-      console.log('running-1', currentImg);
     };
     currentImage();
     const next = () => {
@@ -80,15 +75,11 @@ export default defineComponent({
       currentImage();
     };
 
-
-
-
-
     const login = () => {
       if (inputUserName.value) {
         router.push({
           name: 'groupchat',
-          params: { userName: inputUserName.value },
+          params: { userName: inputUserName.value, currentUserAvatar: currentImg.value },
         });
         // state.userName = inputUserName.value;
         inputUserName.value = '';
@@ -112,6 +103,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.avatar button {
+  background: none;
+}
 #avatar,  #avatar img{
   width: 50px;
   height: 50px;

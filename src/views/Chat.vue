@@ -16,14 +16,18 @@
       :key="message.id"
       >
       <!-- :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'" -->
-        <div v-if="message.type === 'text'" class="text" >{{message.message}}</div>
-        <div v-else id="images_container" >
-          <img :src="message.imageUrl" alt="photo" @load="scrollToBottom">
+        <div class="user_avatar_img"><img :src="message.avatar" alt=""></div>
+        <div>
+
+          <div v-if="message.type === 'text'" class="text" >{{message.message}}</div>
+          <div v-else id="images_container" >
+            <img :src="message.imageUrl" alt="photo" @load="scrollToBottom">
+          </div>
+          <div class="name">{{message.name}}</div>
+          <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
+          <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
         </div>
-        <div class="name">{{message.name}}</div>
-        <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
-        <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
-      </div>
+        </div>
     </section>
 
     <footer class="item_d">
@@ -69,7 +73,7 @@ import Emoji from '@/components/Emoji.vue';
 // }
 export default defineComponent({
   components: { Emoji },
-  props: { userName: String },
+  props: { userName: String, currentUserAvatar: String },
   name: 'Chat',
   setup(props) {
     const router = useRouter();
@@ -83,6 +87,11 @@ export default defineComponent({
     const allMessages : Ref<string[]> = ref([]);
     const show = ref();
     const newRoom = ref('');
+    const avatar = ref('');
+
+    // const currentUserImages = () => {
+    //   avatar.value = props.currentUserAvatar;
+    // };
 
     // const messageRef = database.firestore().collection('newrooms').doc(`${newRoom.value}`);
     const rebeccaChat = () => {
@@ -114,6 +123,7 @@ export default defineComponent({
         name: props.userName,
         message: text.value,
         type: 'text',
+        avatar: props.currentUserAvatar,
         timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
       })
       .then(() => {
@@ -210,12 +220,21 @@ export default defineComponent({
       appendEmojiToText,
       rebeccaChat,
       newRoom,
+      // currentUserImages,
+      avatar,
     };
   },
 });
 </script>
 
 <style scoped>
+#messages_container {
+  display: flex;
+}
+.user_avatar_img img{
+  width: 24px;
+  height: 24px;
+}
 i {
   cursor: pointer;
 }
