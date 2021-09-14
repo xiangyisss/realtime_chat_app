@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
 import Chat from '../views/Chat.vue';
+import NotFound from '@/views/NotFound.vue';
 // import PrivateChat from '@/views/PrivateChat.vue';
 
 
@@ -16,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'groupchat',
     component: Chat,
     props: true,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
   },
   // {
   //   path: '/privatechat/:userName',

@@ -6,7 +6,8 @@
     </header>
 
     <aside class="item_b">
-      <div>Group chat</div>
+      <div class="first_character" ><p class="character">{{firstCharacter}}</p></div>
+      <div class="groupchat">Group chat</div>
     </aside>
 
     <section id='chat_box' class="item_c">
@@ -87,13 +88,20 @@ export default defineComponent({
     const allMessages : Ref<string[]> = ref([]);
     const show = ref();
     const newRoom = ref('');
-    const avatar = ref('');
+    // const avatar = ref('');
+    const firstCharacter = ref('');
 
     // const currentUserImages = () => {
     //   avatar.value = props.currentUserAvatar;
     // };
 
     // const messageRef = database.firestore().collection('newrooms').doc(`${newRoom.value}`);
+    const getNamesFirstletter = () => {
+      firstCharacter.value = props.userName!.charAt(0);
+      console.log('Its running', firstCharacter.value);
+    };
+    getNamesFirstletter();
+
     const rebeccaChat = () => {
       database.firestore().collection('rebeccca').add({
         name: props.userName,
@@ -137,6 +145,7 @@ export default defineComponent({
       storageRef.getDownloadURL().then((downloadURL: any) => {
         database.firestore().collection('messages').add({
           name: props.userName,
+          avatar: props.currentUserAvatar,
           imageUrl: downloadURL,
           type: 'image',
           timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -221,13 +230,29 @@ export default defineComponent({
       rebeccaChat,
       newRoom,
       // currentUserImages,
-      avatar,
+      // avatar,
+      getNamesFirstletter,
+      firstCharacter,
     };
   },
 });
 </script>
 
 <style scoped>
+.first_character {
+  width: 60px;
+  height: 60px;
+  /* padding: 1rem; */
+  background:rgb(81, 81, 255);
+  border-radius: 100%;
+  margin-bottom: 1.5rem;
+}
+.character {
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 60px;
+  margin: 0;
+}
 #messages_container {
   display: flex;
 }
@@ -249,9 +274,9 @@ i {
   font-weight: 600;
 }
 
-.group_chat {
-  background: aqua;
-  cursor: default !important;
+
+.groupchat {
+  font-weight: 600;
 }
 
 #send_text {
@@ -306,6 +331,10 @@ header {
 
 aside {
   border-right: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 section {
   height: 80vh;
@@ -399,8 +428,8 @@ button, .send_button {
 }
 
 img, #images_container {
-  width: 100px;
-  height: 100px;
+  width: 300px;
+  height: 300px;
 }
 
 /* #uploadImages {
