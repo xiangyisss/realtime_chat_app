@@ -1,13 +1,12 @@
 <template>
   <div id='chat_container'>
     <header class="item_a">
-
       <button @click="logout" type="button" class="btn btn-outline-primary">Log out</button>
     </header>
 
     <aside class="item_b">
       <div class="first_character" ><p class="character">{{firstCharacter}}</p></div>
-      <div class="groupchat">Group chat</div>
+      <div class="groupchat">Public chat room</div>
     </aside>
 
     <section id='chat_box' class="item_c">
@@ -18,23 +17,32 @@
       >
       <!-- :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'" -->
         <div class="user_avatar_img"><img :src="message.avatar" alt=""></div>
-        <div>
 
-          <div v-if="message.type === 'text'" class="text" >{{message.message}}</div>
-          <div v-else id="images_container" >
+        <div class="text_area" @mouseover="hover = true" @mouseleave="hover = false">
+          <div class="text" v-if="message.type === 'text'"  >{{message.message}}</div>
+
+          <div class="images" v-else id="images_container" >
             <img :src="message.imageUrl" alt="photo" @load="scrollToBottom">
           </div>
+
           <div class="name">{{message.name}}</div>
+
           <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
           <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
+          <!-- <div class="emoji_react">{{emojiReact}}</div> -->
         </div>
-        </div>
+      </div>
+
+      <!-- <div  v-if="hover" >
+
+      </div> -->
     </section>
 
     <footer class="item_d">
       <form @submit.prevent="saveMessagesToDatabase" id="messages_form" autocomplete="off">
-        <input type="text" placeholder="Aa" class="type_message" id="message" v-model="text">
+        <input type="text" placeholder="Aa" class="type_message" id="message" v-model="text" >
         <button id="send_text"><i class="bi bi-chat"></i></button>
+
         <div id="image_icon">
           <form @submit.prevent id="images_form" >
             <label for="uploadImages">
@@ -44,10 +52,11 @@
             <input type="file" id="uploadImages" accept="image/*" @change="UploadImages" >
           </form>
         </div>
-        <div id="emoji_icon" @click="openEmoji">
-          <!-- <img src="../assets/smile.svg" alt="" > -->
+
+        <div id="emoji_icon" @click="openEmoji" >
           <i class="bi bi-emoji-smile"></i>
         </div>
+
       </form>
       <div  v-if="show" >
         <emoji @onEmojiClick = appendEmojiToText />
@@ -90,6 +99,13 @@ export default defineComponent({
     const newRoom = ref('');
     // const avatar = ref('');
     const firstCharacter = ref('');
+    const hover = ref(Boolean);
+    const emojiReact = ref('');
+
+    const appendEmojiToDatabase = (emojis : any) => {
+      emojiReact.value = emojis;
+      // console.log(hover);
+    };
 
     // const currentUserImages = () => {
     //   avatar.value = props.currentUserAvatar;
@@ -131,6 +147,7 @@ export default defineComponent({
         name: props.userName,
         message: text.value,
         type: 'text',
+        // emoj: emojiReact.value,
         avatar: props.currentUserAvatar,
         timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
       })
@@ -233,12 +250,18 @@ export default defineComponent({
       // avatar,
       getNamesFirstletter,
       firstCharacter,
+      hover,
+      appendEmojiToDatabase,
+      emojiReact,
     };
   },
 });
 </script>
 
 <style scoped>
+/* .text_area {
+  background: #000;
+} */
 .first_character {
   width: 60px;
   height: 60px;
@@ -253,8 +276,8 @@ export default defineComponent({
   line-height: 60px;
   margin: 0;
 }
-#messages_container {
-  display: flex;
+.user_avatar_img {
+  margin-right: 1rem;
 }
 .user_avatar_img img{
   width: 24px;
@@ -344,14 +367,17 @@ section {
   /* margin-top: 1rem ;*/
   /* margin-left: auto;
   margin-right: 1rem; */
+  display: flex;
   margin-bottom: 0.75rem;
-  width: 40%;
+  width: 60%;
   height: auto;
   min-height: 3rem;
   /* background-color: rgba(102, 86, 83, 0.089); */
   border-radius: 4px;
   position: relative;
-
+}
+#messages_container:hover {
+  background-color: rgba(179, 175, 175, 0.158);
 }
 
 .text {
@@ -375,9 +401,9 @@ section {
   padding-left: 0.5rem;
   padding-bottom: 0.25rem;
   font-size: 0.75rem;
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
-  left: 0;
+  left: 0; */
 }
 
 #chat_box {

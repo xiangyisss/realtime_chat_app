@@ -1,17 +1,19 @@
 <template>
-
-  <div class='login'>
+  <div id='login'>
+    <h2>Real time chat</h2>
     <div class="avatar">
-      <button @click="before"><i class="bi bi-chevron-left"></i></button>
+      <button class="arrow_btn" @click="before" ><img class="arrow arrow_left" src="../assets/left.svg" alt="left" ></button>
       <div v-for="i in [currentIndex]" :key="i" id="avatar">
         <img :src="currentImg" alt="" />
       </div>
-      <button @click="next"><i class="bi bi-chevron-right"></i></button>
+      <button class="arrow_btn" @click="next" ><img class="arrow arrow_right" src="../assets/left.svg" alt="right"></button>
     </div>
     <form @submit.prevent='login'>
-      <label for="">User name</label>
-      <input type="text" placeholder='Enter your user name' v-model='inputUserName' required>
-      <input type="submit" value="Login">
+      <label for="name">
+        <input type="text" name="name" class="input_username" placeholder='Enter your user name' v-model='inputUserName' required>
+      </label>
+      <!-- <input type="submit" value="Login"> -->
+      <button class="login_btn">Login</button>
     </form>
   </div>
 </template>
@@ -94,60 +96,98 @@ export default defineComponent({
       currentIndex,
       images,
       currentImg,
-
-      // state,
-
     };
   },
 });
 </script>
 
 <style scoped>
+
+#login {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #42275a;
+  background: -webkit-linear-gradient(to right, #734b6d, #42275a);
+  background: linear-gradient(to right, #734b6d, #42275a);
+
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: rgb(239, 242, 245);
+}
 .avatar {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 2rem;
 }
-.avatar button {
-  background: none;
-}
-#avatar,  #avatar img{
+
+#avatar img{
   width: 50px;
   height: 50px;
 }
-.login {
-  width: 100%;
-  height: 100vh;
-  background-color: tomato;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+
+.arrow {
+  width: 12px;
+  height: 12px;
 }
+
+.arrow_right {
+  transform: rotate(180deg);
+}
+
 form {
   display: flex;
   flex-direction: column;
 }
-label {
-  display: block;
-  text-align: left;
+
+input, .login_btn {
+  width: 15rem;
+  border: none;
+  outline: none;
+  height: 2.5rem;
+  padding-left: 0.5rem;
+  border-radius: 4px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 1rem;
+}
+
+.input_username {
+  margin-bottom: 1rem;
+}
+
+.login_btn {
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: rgb(238, 236, 236);
+  letter-spacing: 1px;
+  background-color: #734b6d;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  border: 1px solid #664160;
+  transition: all 150ms linear;
 }
 
-input {
-  border: none;
+.login_btn:hover {
+  background-color: #42275a;
+  border: 1px solid rgba(#000, .05);
+  box-shadow: 2px 2px 2px 1px rgba(#fff, .2);
+  color: #785f8d;
+  text-shadow: -1px -1px 0 #6c5480;
+}
+.arrow_btn {
   outline: none;
+  border: none;
   height: 2.5rem;
-  padding-left: 0.5rem;
   border-radius: 4px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  background: none;
 }
 
-button {
-  outline: none;
-  border: none;
-  height: 2.5rem;
-  padding-left: 0.5rem;
-  border-radius: 4px;
-}
+
 </style>
