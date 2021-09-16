@@ -1,6 +1,6 @@
 <template>
   <div id='login'>
-    <h2>Real time chat</h2>
+    <h1>Real time chat</h1>
     <div class="avatar">
       <button class="arrow_btn" @click="before" ><img class="arrow arrow_left" src="../assets/left.svg" alt="left" ></button>
       <div v-for="i in [currentIndex]" :key="i" id="avatar">
@@ -113,12 +113,11 @@ export default defineComponent({
   background: #42275a;
   background: -webkit-linear-gradient(to right, #734b6d, #42275a);
   background: linear-gradient(to right, #734b6d, #42275a);
-
 }
 
-h2 {
+h1 {
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   color: rgb(239, 242, 245);
 }
 .avatar {
@@ -129,13 +128,13 @@ h2 {
 }
 
 #avatar img{
-  width: 50px;
-  height: 50px;
+  width: 3.25rem;
+  height: 3.25rem;
 }
 
 .arrow {
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 .arrow_right {

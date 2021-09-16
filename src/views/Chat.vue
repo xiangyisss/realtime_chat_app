@@ -6,7 +6,7 @@
 
     <aside class="item_b">
       <div class="first_character" ><p class="character">{{firstCharacter}}</p></div>
-      <div class="groupchat">Public chat room</div>
+      <div class="groupchat">Group chat</div>
     </aside>
 
     <section id='chat_box' class="item_c">
@@ -14,23 +14,27 @@
       id="messages_container"
       v-for="message in allMessages"
       :key="message.id"
+      :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'"
       >
       <!-- :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'" -->
-        <div class="user_avatar_img"><img :src="message.avatar" alt=""></div>
 
-        <div class="text_area" @mouseover="hover = true" @mouseleave="hover = false">
-          <div class="text" v-if="message.type === 'text'"  >{{message.message}}</div>
 
-          <div class="images" v-else id="images_container" >
-            <img :src="message.imageUrl" alt="photo" @load="scrollToBottom">
-          </div>
+          <div class="user_avatar_img"><img :src="message.avatar" alt="user avatar"></div>
 
           <div class="name">{{message.name}}</div>
 
-          <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div>
-          <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
-          <!-- <div class="emoji_react">{{emojiReact}}</div> -->
-        </div>
+          <div class="text_area" @mouseover="hover = true" @mouseleave="hover = false">
+              <p class="text" v-if="message.type === 'text'">{{message.message}}</p>
+
+              <div class="images" v-else id="images_container" >
+                <img class="uploaded_images" :src="message.imageUrl" alt="photo" @load="scrollToBottom">
+              </div>
+
+              <!-- <div class="time">{{message.timestamp.toDate()}}</div> -->
+              <!-- <div class="emoji_react">{{emojiReact}}</div> -->
+              <!-- <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div> -->
+          </div>
+
       </div>
 
       <!-- <div  v-if="hover" >
@@ -41,24 +45,27 @@
     <footer class="item_d">
       <form @submit.prevent="saveMessagesToDatabase" id="messages_form" autocomplete="off">
         <input type="text" placeholder="Aa" class="type_message" id="message" v-model="text" >
-        <button id="send_text"><i class="bi bi-chat"></i></button>
 
-        <div id="image_icon">
-          <form @submit.prevent id="images_form" >
-            <label for="uploadImages">
-              <!-- <img src="../assets/link.png" alt=""> -->
-              <i class="bi bi-images"></i>
-            </label>
-            <input type="file" id="uploadImages" accept="image/*" @change="UploadImages" >
-          </form>
-        </div>
+        <div class="emoji_image_btn">
+          <div id="emoji_icon" @click="openEmoji" >
+            <!-- <img src="../assets/hfemoji.svg" alt=""> -->
+          </div>
 
-        <div id="emoji_icon" @click="openEmoji" >
-          <i class="bi bi-emoji-smile"></i>
+          <div id="image_icon">
+            <form @submit.prevent id="images_form" >
+              <label for="uploadImages">
+                <img src="../assets/gimage.svg" alt="">
+              </label>
+              <input type="file" id="uploadImages" accept="image/*" @change="UploadImages" >
+            </form>
+          </div>
+
+          <button id="send_text"><img class="send_img" src="../assets/s-1.svg" alt=""></button>
+
         </div>
 
       </form>
-      <div  v-if="show" >
+      <div  v-if="show" class="emoji">
         <emoji @onEmojiClick = appendEmojiToText />
       </div>
 
@@ -128,11 +135,14 @@ export default defineComponent({
     };
 
     const appendEmojiToText = (emojis : any) => {
+      const input : any = document.getElementById('message');
       text.value += emojis;
+      show.value = !show.value;
+      input.focus();
     };
 
     const openEmoji = () => {
-          show.value = !show.value;
+      show.value = !show.value;
     };
 
 
@@ -259,9 +269,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* .text_area {
-  background: #000;
-} */
+
 .first_character {
   width: 60px;
   height: 60px;
@@ -283,9 +291,7 @@ export default defineComponent({
   width: 24px;
   height: 24px;
 }
-i {
-  cursor: pointer;
-}
+
 .chatroom {
   width: 200px;
   height: 30px;
@@ -296,7 +302,6 @@ i {
   cursor: pointer;
   font-weight: 600;
 }
-
 
 .groupchat {
   font-weight: 600;
@@ -318,9 +323,9 @@ i {
 #uploadImages {
   display: none;
 }
-#images_form label img{
-  width: 24px;
-  height: 24px;
+#images_form label img, .send_img{
+  width: 16px;
+  height: 16px;
   cursor: pointer;
 }
 .item_a {
@@ -337,12 +342,12 @@ i {
 }
 #chat_container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
   grid-template-areas:
-  'header header header header'
-  'aside section section section'
-  'footer footer footer footer'
+  'header header header header header'
+  'aside section section section section'
+  'aside footer footer footer footer'
   ;
 }
 header {
@@ -359,8 +364,10 @@ aside {
   justify-content: start;
   align-items: center;
 }
-section {
+section, footer {
   height: 80vh;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 #messages_container {
@@ -368,22 +375,29 @@ section {
   /* margin-left: auto;
   margin-right: 1rem; */
   display: flex;
-  margin-bottom: 0.75rem;
-  width: 60%;
+  margin-bottom: 1rem;
+  /* width: 70%;
   height: auto;
-  min-height: 3rem;
+  min-height: 3rem; */
+  max-width: 60%;
+  width:fit-content;
+  height:fit-content;
   /* background-color: rgba(102, 86, 83, 0.089); */
   border-radius: 4px;
   position: relative;
 }
-#messages_container:hover {
+/* #messages_container:hover {
   background-color: rgba(179, 175, 175, 0.158);
-}
+} */
 
 .text {
   text-align: left;
-  padding: 0.5rem 0 0 0.5rem;
-  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+  /* margin-bottom: 0.5rem; */
+  word-break: break-all;
+  width:fit-content;
+  height:fit-content;
+  margin: 0;
 }
 
 .name {
@@ -392,14 +406,14 @@ section {
   padding-bottom: 0.25rem;
   font-size: 0.75rem;
   position: absolute;
-  bottom: 0;
+  top: 0;
   right: 0;
 }
 
 .time {
   text-align: left;
   padding-left: 0.5rem;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.5rem;
   font-size: 0.75rem;
   /* position: absolute;
   bottom: 0;
@@ -415,35 +429,40 @@ section {
 }
 
 footer {
-  height: 8vh;
-  margin-top: 1rem;
+  height: 12vh;
+  width: 100%;
+  /* margin-top: 1rem; */
   display: flex;
-  justify-content: end;
+  justify-content: start;
+  align-items: center;
+  position: relative;
 }
 
-button, .send_button {
+/* button {
   padding: 0.5rem;
   outline: none;
   cursor: pointer;
-}
+} */
 
 .type_message {
-  width: 60%;
-  padding: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
   outline: none;
+  border-radius: 20px;
+  border: 1px solid rgba(141, 135, 135, 0.466);
+  box-shadow: 2px 2px 6px 1px rgba(211, 204, 204, 0.466);
 }
 
 .sentMsgStyle {
-  background-color: green;
-  color: aliceblue;
+  background: rgba(137, 186, 231, 0.24);
+  color: rgb(32, 31, 31);
   margin-left: auto;
-  margin-right: 1rem;
+  /* text-align: right; */
 }
 .receiveMsgStyle {
-  background-color: brown;
-  color: white;
-  margin-left: 1rem;
-  height: 300px;
+  color: rgb(32, 31, 31);
+  background: rgba(243, 238, 238, 0.466);
+  /* height: 300px; */
   margin-right: auto;
 }
 
@@ -453,7 +472,7 @@ button, .send_button {
   background: pink;
 }
 
-img, #images_container {
+.uploaded_images, #images_container {
   width: 300px;
   height: 300px;
 }
@@ -463,19 +482,41 @@ img, #images_container {
   width: 100px;
 } */
 
-#emoji_icon,  #emoji_icon img {
+#emoji_icon {
   width: 20px;
   height: 20px;
+  cursor: pointer;
+  background-image: url('../assets/he-moji.svg');
+    background-repeat:no-repeat;
+   background-size:contain;
 }
 
- #emoji_icon img {
-   cursor: pointer;
- }
+#emoji_icon:hover {
+  background-image: url('../assets/hfemoji.svg');
+}
 
 #messages_form {
-  width: 80%;
+  width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  position: relative;
 }
+
+.emoji_image_btn {
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  right: 0;
+  margin-right: 1rem;
+}
+
+.emoji {
+  position: absolute;
+  right: 2.5rem;
+  bottom: 5.5rem;
+}
+
 </style>
