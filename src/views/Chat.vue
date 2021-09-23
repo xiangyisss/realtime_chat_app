@@ -52,10 +52,10 @@
     </section>
 
     <footer class="item_d">
-      <form @submit.prevent @keyup.enter="saveMessagesToDatabase" id="messages_form" autocomplete="off">
+      <form @submit.prevent @keyup.enter="sendMessages" @keydown="canNotSendOnlySpace" id="messages_form" autocomplete="off">
         <div class="input_wrap">
           <textarea name="" placeholder="Aa"
-          ref="textarea"  rows="1" @input="changeHeight"  v-model="text"></textarea>
+          ref="textarea"  rows="1" @input="changeHeight"  v-model="text" ></textarea>
         <!-- <input type="text" placeholder="Aa" class="type_message" id="message" v-model="text" > -->
         </div>
 
@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import {
- defineComponent, Ref, ref, onUpdated, onMounted, watch,
+ defineComponent, Ref, ref, onUpdated, onMounted,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import firebase from 'firebase';
@@ -126,11 +126,11 @@ export default defineComponent({
     const textarea = ref();
     const chatbox = ref();
 
-    watch(() => text, (currentValue, oldValue) => {
-      console.log(currentValue);
-      console.log(oldValue);
-      console.log('running0');
-    });
+    const canNotSendOnlySpace = (event : any) => {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+      }
+    };
 
     const changeHeight = () => {
       textarea.value.style.height = `${textarea.value!.scrollHeight}px`;
@@ -189,6 +189,14 @@ export default defineComponent({
       textarea.value.style.height = '';
     };
 
+    const sendMessages = () => {
+      const checkIfOnlySpace = text.value.trim();
+      if (checkIfOnlySpace !== '') {
+        saveMessagesToDatabase();
+      } else {
+        alert('Can not send blank space');
+      }
+    };
 
 
     const getImagesUrlToDatabase = (storageRef : any) => {
@@ -262,12 +270,10 @@ export default defineComponent({
 
     onMounted(() => {
       scrollToBottom();
-      console.log('0');
     });
 
     onUpdated(() => {
       scrollToBottom();
-      console.log('1');
     });
 
     loadAllMessages();
@@ -285,8 +291,7 @@ export default defineComponent({
       appendEmojiToText,
       rebeccaChat,
       newRoom,
-      // currentUserImages,
-      // avatar,
+
       getNamesFirstletter,
       firstCharacter,
       hover,
@@ -294,9 +299,9 @@ export default defineComponent({
       emojiReact,
       changeHeight,
       textarea,
-      // chatDiv,
       chatbox,
-
+      sendMessages,
+      canNotSendOnlySpace,
     };
   },
 });
@@ -544,7 +549,8 @@ footer {
 
 textarea {
   resize: none;
-  overflow-y:auto;
+  overflow: auto;
+  /* overflow-y:auto; */
   line-height: 1.5;
   width: 80%;
   max-height: 80px;
