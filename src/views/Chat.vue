@@ -9,34 +9,39 @@
       <div class="groupchat">Group chat</div>
     </aside>
 
-    <section id='chat_box' ref="chatbox" class="item_c">
+    <section id='chat_box' ref="chatbox" class="item_c" >
       <div
       id="messages_container"
       v-for="message in allMessages"
       :key="message.id"
+      ref="chatDiv"
             :class="message.name === userName ? 'sentMsgStyleToRight' : 'receiveMsgStyleLeft'"
 
       >
       <!-- :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'" -->
 
 
-          <div class="user_avatar_img"  :class="message.name === userName && 'sentMsgStyleToMargin' "><img :src="message.avatar" alt="user avatar"></div>
+          <div class="user_avatar_img"  :class="message.name === userName && 'sentMsgStyleToMargin' "><img :src="message.avatar" alt="avatar">
+          </div>
 
 
           <div class="wrap" :class="message.name === userName && 'sentMsgStyleDirection' ">
 
-            <div class="name" :class="message.name === userName && 'sentMsgStylePadding' ">{{message.name}}</div>
-            <div class="text_area" @mouseover="hover = true" @mouseleave="hover = false"
-             :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
-                <p class="text" v-if="message.type === 'text'">{{message.message}}</p>
+              <div class="name" :class="message.name === userName && 'sentMsgStylePadding' "  >
+              <!-- v-if="message.time !== allMessages[i - 1 ].time || message.name !== allMessages[i - 1 ]?.name" -->
+              {{message.name}}</div>
 
-                <div class="images" v-else id="images_container" >
-                  <img class="uploaded_images" :src="message.imageUrl" alt="photo" @load="scrollToBottom">
-                </div>
+              <div class="text_area" @mouseover="hover = true" @mouseleave="hover = false"
+              :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
+                  <p class="text" v-if="message.type === 'text'">{{message.message}}</p>
 
-                <!-- <div class="emoji_react">{{emojiReact}}</div> -->
-                <!-- <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div> -->
-            </div>
+                  <div class="images" v-else id="images_container" >
+                    <img :src="message.imageUrl" alt="images" @load="scrollToBottom">
+                  </div>
+
+                  <!-- <div class="emoji_react">{{emojiReact}}</div> -->
+                  <!-- <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div> -->
+              </div>
           </div>
 
       </div>
@@ -49,7 +54,8 @@
     <footer class="item_d">
       <form @submit.prevent @keyup.enter="saveMessagesToDatabase" id="messages_form" autocomplete="off">
         <div class="input_wrap">
-          <textarea name="" ref="textarea"  rows="1" @input="changeHeight"  v-model="text"></textarea>
+          <textarea name="" placeholder="Aa"
+          ref="textarea"  rows="1" @input="changeHeight"  v-model="text"></textarea>
         <!-- <input type="text" placeholder="Aa" class="type_message" id="message" v-model="text" > -->
         </div>
 
@@ -84,12 +90,13 @@
 
 <script lang="ts">
 import {
- defineComponent, Ref, ref,
+ defineComponent, Ref, ref, onUpdated, onMounted, watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import firebase from 'firebase';
 import database from '../db';
 import Emoji from '@/components/Emoji.vue';
+
 
 // interface style {
 //   backgroundColor: string,
@@ -118,6 +125,12 @@ export default defineComponent({
     const emojiReact = ref('');
     const textarea = ref();
     const chatbox = ref();
+
+    watch(() => text, (currentValue, oldValue) => {
+      console.log(currentValue);
+      console.log(oldValue);
+      console.log('running0');
+    });
 
     const changeHeight = () => {
       textarea.value.style.height = `${textarea.value!.scrollHeight}px`;
@@ -159,27 +172,23 @@ export default defineComponent({
 
 
     const scrollToBottom = () => {
-      const chatBox : any = document.getElementById('chat_box');
-      chatBox.scrollTop = chatBox.scrollHeight;
-      // chatbox.value.scrollTop = chatbox.value.scrollHeight;
+      chatbox.value.scrollTop = chatbox.value.scrollHeight;
     };
 
 
     const saveMessagesToDatabase = () => {
-      database.firestore().collection('messages').add({
+        database.firestore().collection('messages').add({
         name: props.userName,
         message: text.value,
         type: 'text',
         // emoj: emojiReact.value,
         avatar: props.currentUserAvatar,
         timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-      })
-      .then(() => {
-        scrollToBottom();
       });
       text.value = '';
       textarea.value.style.height = '';
     };
+
 
 
     const getImagesUrlToDatabase = (storageRef : any) => {
@@ -249,15 +258,20 @@ export default defineComponent({
         }
       });
       });
-      setTimeout(() => {
-        scrollToBottom();
-        // console.log('texting-2');
-      }, 700);
     };
 
+    onMounted(() => {
+      scrollToBottom();
+      console.log('0');
+    });
+
+    onUpdated(() => {
+      scrollToBottom();
+      console.log('1');
+    });
 
     loadAllMessages();
-    // scrollToBottom();
+
 
     return {
       logout,
@@ -280,7 +294,9 @@ export default defineComponent({
       emojiReact,
       changeHeight,
       textarea,
+      // chatDiv,
       chatbox,
+
     };
   },
 });
@@ -490,7 +506,7 @@ section {
   overflow-y: auto;
   width: 100%;
   height: 75vh;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   padding-top: 1rem;
 }
 
@@ -534,17 +550,21 @@ textarea {
   max-height: 80px;
   outline: none;
   border: none;
+  border-bottom: 1px solid rgb(228, 221, 221);
 }
 
-.uploaded_images, #images_container {
-  width: 300px;
-  height: 300px;
+#images_container {
+  background-color: #fff;
+
 }
 
-/* #uploadImages {
-  color: rgba(0, 0, 0, 0);
-  width: 100px;
-} */
+#images_container img {
+  object-fit: cover;
+  max-width: 300px;
+  max-height: 200px;
+}
+
+
 
 #emoji_icon {
   width: 20px;
