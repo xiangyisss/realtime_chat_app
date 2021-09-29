@@ -8,7 +8,7 @@
       </div>
       <button class="arrow_btn" @click="next" ><img class="arrow arrow_right" src="../assets/left.svg" alt="right"></button>
     </div>
-    <form @submit.prevent='login'>
+    <form @submit.prevent='login' autocomplete="off">
       <label for="name">
         <input type="text" name="name" class="input_username" placeholder='Enter your user name' v-model='inputUserName' required>
       </label>
@@ -56,10 +56,10 @@ export default defineComponent({
 
     const images = [
         'https://cdn-icons-png.flaticon.com/512/3135/3135789.png',
-        'https://cdn-icons-png.flaticon.com/512/194/194932.png',
         'https://cdn-icons-png.flaticon.com/512/147/147140.png',
-        'https://cdn-icons-png.flaticon.com/512/194/194938.png',
+        'https://cdn-icons-png.flaticon.com/512/194/194932.png',
         'https://cdn-icons-png.flaticon.com/512/147/147144.png',
+        'https://cdn-icons-png.flaticon.com/512/194/194938.png',
         'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
     ];
     let currentIndex = 0;
@@ -83,7 +83,6 @@ export default defineComponent({
           name: 'groupchat',
           params: { userName: inputUserName.value, currentUserAvatar: currentImg.value },
         });
-        // state.userName = inputUserName.value;
         inputUserName.value = '';
       }
     };

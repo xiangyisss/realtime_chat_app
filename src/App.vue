@@ -19,9 +19,10 @@ export default defineComponent({
 
 <style>
 * {
-  margin: 0;
+  margin: 0 ;
   box-sizing: border-box;
 }
+
 #app {
   font-family: 'Ubuntu Mono', monospace;
   -webkit-font-smoothing: antialiased;
