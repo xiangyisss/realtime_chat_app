@@ -1,7 +1,7 @@
 <template>
     <div class="chatroom">
-        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index" @click="currentIndex = i">
-            <li :class="currentIndex === i && 'active'">{{roomname}}</li>
+        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="passname(roomname, i)" >
+            <li :class="{active: currentIndex === i && 'active'}">{{roomname}}</li>
         </ul>
         <div>{{currentRoom[currentIndex]}}</div>
     </div>
@@ -9,13 +9,31 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
     name: 'Chatrooms',
     setup() {
+        const store = useStore();
         const currentRoom = ['Public chat', 'Suzy', 'Mario'];
         const currentIndex = ref(0);
-        return { currentRoom, currentIndex };
+        const currentRoomName = ref('');
+        const passname = (name : any, index : any) => {
+            currentRoomName.value = name;
+            currentIndex.value = index;
+            console.log('Room name :', currentRoomName, currentIndex);
+        };
+        // store.dispatch('gotName', {
+        //     name: currentRoomName,
+        // });
+        return {
+            currentRoom,
+            currentIndex,
+            passname,
+            gotName: () => store.dispatch('gotName', {
+            name: currentRoomName,
+        }),
+        };
     },
 });
 </script>

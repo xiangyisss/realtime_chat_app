@@ -3,6 +3,7 @@
         <div class="personalInfo">
             <img :src="currentUserAvatar" alt="icon">
             <p>{{userName}}</p>
+            <!-- <p>{{roomName}}</p> -->
         </div>
             <div class="mychat_menu">
                 <img src="../assets/arrow.svg" alt="icon">
@@ -19,6 +20,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+// import { useStore } from 'vuex';
 import ChatRooms from './ChatRooms.vue';
 
 
@@ -26,6 +28,11 @@ export default defineComponent({
   components: { ChatRooms },
     name: 'SideMenu',
     props: { userName: String, currentUserAvatar: String },
+    setup() {
+        // const store = useStore();
+
+        return {};
+    },
 });
 </script>
 

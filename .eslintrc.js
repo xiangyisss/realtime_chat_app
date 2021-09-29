@@ -19,10 +19,9 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
     'max-len': 'off',
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
-    "no-multiple-empty-lines": [2, {"max": 99999, "maxEOF": 0}],
-    'indent': 'off',
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
+    'no-multiple-empty-lines': [2, { max: 99999, maxEOF: 0 }],
+    indent: 'off',
   },
 };
-
