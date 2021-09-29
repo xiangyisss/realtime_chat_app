@@ -8,7 +8,7 @@
           </div>
           <div class="emoji_image_box">
             <button id="send_text_btn" @click="sendMessages">
-              <img class="sendtext_btn" src="../assets/direct.svg" alt="button image">
+              <img class="sendtext_btn" src="../assets/send-button.svg" alt="button image">
             </button>
             <div id="images_upload">
               <form @submit.prevent id="images_upload_form" >
@@ -49,6 +49,7 @@ export default defineComponent({
                 name: props.userName,
                 message: text.value,
                 type: 'text',
+                rooms: 'currentRoom',
                 // emoj: emojiReact.value,
                 avatar: props.currentUserAvatar,
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -165,7 +166,7 @@ textarea {
     border: none;
 }
 .emoji_image_box {
-    width: 15%;
+    width: 10%;
     display: flex;
     align-items: center;
     justify-content: space-around;

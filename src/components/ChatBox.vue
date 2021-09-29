@@ -47,7 +47,7 @@ export default defineComponent({
 
         const loadAllMessages = () => {
         // const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
-            const query : any = database.firestore().collection('messages').orderBy('timestamp');
+            const query : any = database.firestore().collection('messages').where('rooms', '==', 'currentRoom').orderBy('timestamp');
             query.onSnapshot((snapShot : any) => {
                 snapShot.docChanges().forEach((change : any) => {
                     if (change.type === 'added') {

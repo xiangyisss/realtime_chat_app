@@ -8,16 +8,22 @@
                 <img src="../assets/arrow.svg" alt="icon">
                 <p>My chats</p>
             </div>
-            <div class="chatroom_list">
+            <!-- <div class="chatroom_list">
                 <p>Public chat</p>
-            </div>
+                <p>Casandra</p>
+                <p>Linda</p>
+            </div> -->
+            <chat-rooms />
       </aside>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import ChatRooms from './ChatRooms.vue';
+
 
 export default defineComponent({
+  components: { ChatRooms },
     name: 'SideMenu',
     props: { userName: String, currentUserAvatar: String },
 });
@@ -66,7 +72,7 @@ export default defineComponent({
     font-weight: 600;
     margin: 0;
 }
-.chatroom_list {
+/* .chatroom_list {
     width: 100%;
     height: 2.5rem;
     background-color: rgba(238, 235, 235, 0.445);
@@ -83,5 +89,8 @@ export default defineComponent({
 }
 .chatroom_list p {
     line-height: 2.5rem;
-}
+    text-align: left;
+    padding-left: 2rem;
+    font-weight: 600;
+} */
 </style>

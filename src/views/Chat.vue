@@ -99,4 +99,11 @@ footer {
   position: relative;
 }
 
+@media screen and (max-width : 800px) {
+  #chat_container {
+    background-color: plum;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 </style>
