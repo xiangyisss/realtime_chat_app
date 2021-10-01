@@ -14,13 +14,12 @@
                 <p>Casandra</p>
                 <p>Linda</p>
             </div> -->
-            <chat-rooms />
+            <chat-rooms @roomNameToParent="roomName($event)"/>
       </aside>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-// import { useStore } from 'vuex';
+import { defineComponent, ref } from 'vue';
 import ChatRooms from './ChatRooms.vue';
 
 
@@ -28,10 +27,14 @@ export default defineComponent({
   components: { ChatRooms },
     name: 'SideMenu',
     props: { userName: String, currentUserAvatar: String },
-    setup() {
-        // const store = useStore();
-
-        return {};
+    setup(props, { emit }) {
+        const currentRoomName = ref('');
+        const roomName = (name : any) => {
+            currentRoomName.value = name;
+            console.log('running', currentRoomName.value);
+            emit('roomNameToParent', currentRoomName.value);
+        };
+        return { roomName };
     },
 });
 </script>

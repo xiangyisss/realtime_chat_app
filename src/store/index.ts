@@ -7,11 +7,16 @@ export default createStore({
     },
   },
   mutations: {
-    gotName(state, payload) {
+    passname(state, payload) {
       state.chatroom.roomName = payload;
     },
   },
   actions: {
+    passname({ commit }, payload) {
+      commit('passname', {
+        payload,
+      });
+    },
   },
   modules: {
   },

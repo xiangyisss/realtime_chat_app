@@ -1,6 +1,6 @@
 <template>
     <div class="chatroom">
-        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="passname(roomname, i)" >
+        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname)" >
             <li :class="{active: currentIndex === i && 'active'}">{{roomname}}</li>
         </ul>
         <div>{{currentRoom[currentIndex]}}</div>
@@ -9,30 +9,26 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useStore } from 'vuex';
+// import { useStore } from 'vuex';
+
 
 export default defineComponent({
     name: 'Chatrooms',
-    setup() {
-        const store = useStore();
+    setup(props, { emit }) {
+        // const store = useStore();
         const currentRoom = ['Public chat', 'Suzy', 'Mario'];
         const currentIndex = ref(0);
-        const currentRoomName = ref('');
-        const passname = (name : any, index : any) => {
+        const currentRoomName = ref('Public chat');
+        const sendRoomNameToParent = (name : any) => {
             currentRoomName.value = name;
-            currentIndex.value = index;
-            console.log('Room name :', currentRoomName, currentIndex);
+            console.log('currentRoomName:', currentRoomName.value);
+            emit('roomNameToParent', currentRoomName.value);
         };
-        // store.dispatch('gotName', {
-        //     name: currentRoomName,
-        // });
+
         return {
             currentRoom,
             currentIndex,
-            passname,
-            gotName: () => store.dispatch('gotName', {
-            name: currentRoomName,
-        }),
+            sendRoomNameToParent,
         };
     },
 });

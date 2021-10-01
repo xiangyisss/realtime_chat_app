@@ -4,7 +4,8 @@
           id="messages_form" autocomplete="off">
           <div class="input_box">
             <textarea name="" placeholder="Aa"
-            ref="textarea"  v-model="text"   ></textarea>
+            ref="textarea"  v-model="text"   >
+            </textarea>
           </div>
           <div class="emoji_image_box">
             <button id="send_text_btn" @click="sendMessages">
@@ -29,7 +30,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
+import {
+ defineComponent, ref, Ref,
+} from 'vue';
 import firebase from 'firebase';
 import database from '../db';
 import Emoji from '@/components/Emoji.vue';
@@ -37,24 +40,25 @@ import Emoji from '@/components/Emoji.vue';
 export default defineComponent({
     name: 'InputBox',
     components: { Emoji },
-    props: { userName: String, currentUserAvatar: String },
+    props: {
+ userName: String, currentUserAvatar: String, roomdata: String,
+},
     setup(props) {
         const text : Ref<string> = ref('');
         const textarea = ref();
         const show = ref();
-
-
         const saveMessagesToDatabase = () => {
             database.firestore().collection('messages').add({
                 name: props.userName,
                 message: text.value,
                 type: 'text',
-                rooms: 'currentRoom',
+                rooms: props.roomdata,
                 // emoj: emojiReact.value,
                 avatar: props.currentUserAvatar,
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
             });
             text.value = '';
+            console.log('running3', props.roomdata);
             // textarea.value.style.height = '';
         };
         const sendMessages = () => {

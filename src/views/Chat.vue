@@ -1,15 +1,15 @@
 <template>
   <div id='chat_container'>
       <menu-bar />
-      <side-menu :userName="userName"  :currentUserAvatar ="currentUserAvatar"/>
+      <side-menu :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName($event)"/>
       <chat-box :userName="userName" :currentUserAvatar ="currentUserAvatar"/>
-      <input-box :userName="userName"  :currentUserAvatar ="currentUserAvatar" />
+      <input-box :userName="userName"  :currentUserAvatar ="currentUserAvatar" :roomdata ="roomdata" />
   </div>
 </template>
 
 <script lang="ts">
 import {
- defineComponent,
+ defineComponent, ref,
 } from 'vue';
 
 import MenuBar from '@/components/MenuBar.vue';
@@ -30,8 +30,12 @@ export default defineComponent({
   props: { userName: String, currentUserAvatar: String },
   name: 'Chat',
   setup() {
-    return {
-    };
+    const roomdata = ref('Public chat');
+    const roomName = (name : any) => {
+            roomdata.value = name;
+            console.log('running-2', roomdata.value);
+        };
+    return { roomName, roomdata };
   },
 });
 </script>
