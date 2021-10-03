@@ -33,21 +33,25 @@
 
 <script lang="ts">
 import {
- defineComponent, Ref, ref, onMounted, onUpdated,
+ defineComponent, Ref, ref, onMounted, onUpdated, watch,
 } from 'vue';
 import database from '../db';
 
 
 export default defineComponent({
     name: 'ChatBox',
-    props: { userName: String, currentUserAvatar: String },
-    setup() {
+    props: { userName: String, currentUserAvatar: String, roomname: String },
+    setup(props) {
         const chatbox = ref();
         const allMessages : Ref<string[]> = ref([]);
+        console.log('props value is :', props.roomname);
+        const test = ref(props.roomname);
+        console.log('test value is :', props.roomname);
 
-        const loadAllMessages = () => {
+        const loadAllMessages = (roomname: any) => {
         // const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
-            const query : any = database.firestore().collection('messages').where('rooms', '==', 'currentRoom').orderBy('timestamp');
+            console.log('props value----- :', roomname);
+            const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`);
             query.onSnapshot((snapShot : any) => {
                 snapShot.docChanges().forEach((change : any) => {
                     if (change.type === 'added') {
@@ -59,7 +63,6 @@ export default defineComponent({
                 });
             });
         };
-
         const scrollToBottom = () => {
             chatbox.value.scrollTop = chatbox.value.scrollHeight;
         };
@@ -68,8 +71,18 @@ export default defineComponent({
         });
         onUpdated(() => {
             scrollToBottom();
+            // test.value = props.roomname;
         });
-        loadAllMessages();
+        watch(() => test, (first, second) => {
+            console.log(
+                'Watch props.selected function called with args:',
+
+                first,
+                second,
+            );
+            loadAllMessages(first);
+        });
+        loadAllMessages(props.roomname);
         return { scrollToBottom, allMessages, chatbox };
     },
 });

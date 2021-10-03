@@ -1,9 +1,9 @@
 <template>
   <div id='chat_container'>
       <menu-bar />
-      <side-menu :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName($event)"/>
-      <chat-box :userName="userName" :currentUserAvatar ="currentUserAvatar"/>
-      <input-box :userName="userName"  :currentUserAvatar ="currentUserAvatar" :roomdata ="roomdata" />
+      <side-menu :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName"/>
+      <chat-box :userName="userName" :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
+      <input-box :userName="userName"  :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
   </div>
 </template>
 

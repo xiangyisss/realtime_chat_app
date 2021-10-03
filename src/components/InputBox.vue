@@ -41,7 +41,7 @@ export default defineComponent({
     name: 'InputBox',
     components: { Emoji },
     props: {
- userName: String, currentUserAvatar: String, roomdata: String,
+ userName: String, currentUserAvatar: String, roomname: String,
 },
     setup(props) {
         const text : Ref<string> = ref('');
@@ -52,13 +52,13 @@ export default defineComponent({
                 name: props.userName,
                 message: text.value,
                 type: 'text',
-                rooms: props.roomdata,
+                room: props.roomname,
                 // emoj: emojiReact.value,
                 avatar: props.currentUserAvatar,
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
             });
             text.value = '';
-            console.log('running3', props.roomdata);
+            console.log('running3', props.roomname);
             // textarea.value.style.height = '';
         };
         const sendMessages = () => {
@@ -84,6 +84,7 @@ export default defineComponent({
             storageRef.getDownloadURL().then((downloadURL: any) => {
                 database.firestore().collection('messages').add({
                 name: props.userName,
+                room: props.roomname,
                 avatar: props.currentUserAvatar,
                 imageUrl: downloadURL,
                 type: 'image',

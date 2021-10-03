@@ -1,7 +1,7 @@
 <template>
     <div class="chatroom">
-        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname)" >
-            <li :class="{active: currentIndex === i && 'active'}">{{roomname}}</li>
+        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname, i)" >
+            <li :class="currentIndex === i && 'active'">{{roomname}}</li>
         </ul>
         <div>{{currentRoom[currentIndex]}}</div>
     </div>
@@ -19,9 +19,10 @@ export default defineComponent({
         const currentRoom = ['Public chat', 'Suzy', 'Mario'];
         const currentIndex = ref(0);
         const currentRoomName = ref('Public chat');
-        const sendRoomNameToParent = (name : any) => {
+        const sendRoomNameToParent = (name : any, index : any) => {
             currentRoomName.value = name;
-            console.log('currentRoomName:', currentRoomName.value);
+            currentIndex.value = index;
+            // console.log('currentRoomName:', currentRoomName.value);
             emit('roomNameToParent', currentRoomName.value);
         };
 

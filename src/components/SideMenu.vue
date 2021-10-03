@@ -31,8 +31,9 @@ export default defineComponent({
         const currentRoomName = ref('');
         const roomName = (name : any) => {
             currentRoomName.value = name;
-            console.log('running', currentRoomName.value);
+            // console.log('running', currentRoomName.value);
             emit('roomNameToParent', currentRoomName.value);
+            console.log('I am in this room :', currentRoomName.value);
         };
         return { roomName };
     },
