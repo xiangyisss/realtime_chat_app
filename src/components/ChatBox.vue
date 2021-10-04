@@ -44,14 +44,9 @@ export default defineComponent({
     setup(props) {
         const chatbox = ref();
         const allMessages : Ref<string[]> = ref([]);
-        console.log('props value is :', props.roomname);
-        const test = ref(props.roomname);
-        console.log('test value is :', props.roomname);
-
         const loadAllMessages = (roomname: any) => {
         // const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
-            console.log('props value----- :', roomname);
-            const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`);
+            const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`).orderBy('timestamp');
             query.onSnapshot((snapShot : any) => {
                 snapShot.docChanges().forEach((change : any) => {
                     if (change.type === 'added') {
@@ -71,16 +66,10 @@ export default defineComponent({
         });
         onUpdated(() => {
             scrollToBottom();
-            // test.value = props.roomname;
         });
-        watch(() => test, (first, second) => {
-            console.log(
-                'Watch props.selected function called with args:',
-
-                first,
-                second,
-            );
+        watch(() => props.roomname, (first) => {
             loadAllMessages(first);
+            allMessages.value = [];
         });
         loadAllMessages(props.roomname);
         return { scrollToBottom, allMessages, chatbox };

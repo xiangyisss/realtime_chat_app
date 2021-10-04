@@ -33,7 +33,7 @@ export default defineComponent({
             currentRoomName.value = name;
             // console.log('running', currentRoomName.value);
             emit('roomNameToParent', currentRoomName.value);
-            console.log('I am in this room :', currentRoomName.value);
+            // console.log('I am in this room :', currentRoomName.value);
         };
         return { roomName };
     },

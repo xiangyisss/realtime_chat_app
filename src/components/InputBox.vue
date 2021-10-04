@@ -53,12 +53,11 @@ export default defineComponent({
                 message: text.value,
                 type: 'text',
                 room: props.roomname,
-                // emoj: emojiReact.value,
                 avatar: props.currentUserAvatar,
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
             });
             text.value = '';
-            console.log('running3', props.roomname);
+            // console.log('running3', props.roomname);
             // textarea.value.style.height = '';
         };
         const sendMessages = () => {
