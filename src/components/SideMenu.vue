@@ -3,17 +3,11 @@
         <div class="personalInfo">
             <img :src="currentUserAvatar" alt="icon">
             <p>{{userName}}</p>
-            <!-- <p>{{roomName}}</p> -->
         </div>
             <div class="mychat_menu">
                 <img src="../assets/arrow.svg" alt="icon">
                 <p>My chats</p>
             </div>
-            <!-- <div class="chatroom_list">
-                <p>Public chat</p>
-                <p>Casandra</p>
-                <p>Linda</p>
-            </div> -->
             <chat-rooms @roomNameToParent="roomName($event)"/>
       </aside>
 </template>
@@ -31,9 +25,7 @@ export default defineComponent({
         const currentRoomName = ref('');
         const roomName = (name : any) => {
             currentRoomName.value = name;
-            // console.log('running', currentRoomName.value);
             emit('roomNameToParent', currentRoomName.value);
-            // console.log('I am in this room :', currentRoomName.value);
         };
         return { roomName };
     },

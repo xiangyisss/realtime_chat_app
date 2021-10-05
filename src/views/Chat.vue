@@ -33,7 +33,6 @@ export default defineComponent({
     const roomdata = ref('Public chat');
     const roomName = (name : any) => {
             roomdata.value = name;
-            // console.log('running-2', roomdata.value);
         };
     return { roomName, roomdata };
   },

@@ -45,18 +45,20 @@ export default defineComponent({
         const chatbox = ref();
         const allMessages : Ref<string[]> = ref([]);
         const loadAllMessages = (roomname: any) => {
-        // const query : any = database.firestore().collection('messages').orderBy('timestamp').limit(50);
             const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`).orderBy('timestamp');
             query.onSnapshot((snapShot : any) => {
-                snapShot.docChanges().forEach((change : any) => {
-                    if (change.type === 'added') {
-                    allMessages.value.push(change.doc.data());
-                    }
-                    if (change.type === 'removed') {
-                    console.log('Removed', change.doc.data());
-                    }
+                const data: any[] = [];
+                snapShot.forEach((doc : any) => {
+                    data.push(doc.data());
                 });
+                allMessages.value = data;
             });
+            // const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`).orderBy('timestamp');
+            // query.onSnapshot((snapShot : any) => {
+            //     snapShot.forEach((doc : any) => {
+            //         allMessages.value.push(doc.data());
+            //     });
+            // });
         };
         const scrollToBottom = () => {
             chatbox.value.scrollTop = chatbox.value.scrollHeight;

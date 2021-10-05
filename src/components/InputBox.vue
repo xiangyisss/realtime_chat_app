@@ -1,9 +1,9 @@
 <template>
     <footer class="typing_area">
-        <form @submit.prevent @keyup.enter="sendMessages" @keydown="canNotSendOnlySpace"
+        <form @submit.prevent
           id="messages_form" autocomplete="off">
           <div class="input_box">
-            <textarea name="" placeholder="Aa"
+            <textarea name="" placeholder="Aa" @keyup.enter="sendMessages" @keydown="canNotSendOnlySpace"
             ref="textarea"  v-model="text"   >
             </textarea>
           </div>
@@ -57,7 +57,6 @@ export default defineComponent({
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
             });
             text.value = '';
-            // console.log('running3', props.roomname);
             // textarea.value.style.height = '';
         };
         const sendMessages = () => {
