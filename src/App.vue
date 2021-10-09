@@ -13,8 +13,9 @@ export default defineComponent({
 </script>
 
 <style>
-* {
-  margin: 0 ;
+html, body, * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -24,6 +25,9 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  width: 100vw;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 #nav {
@@ -37,5 +41,12 @@ export default defineComponent({
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+@media  (max-width: 700px)  {
+  html,body {
+    /* overflow-x: hidden; */
+    overflow-y: hidden;
+  }
 }
 </style>

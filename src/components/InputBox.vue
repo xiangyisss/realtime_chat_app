@@ -1,29 +1,27 @@
 <template>
     <footer class="typing_area">
         <form @submit.prevent
-          id="messages_form" autocomplete="off">
-          <div class="input_box">
-            <textarea name="" placeholder="Aa" @keyup.enter="sendMessages" @keydown="canNotSendOnlySpace"
-            ref="textarea"  v-model="text"   >
-            </textarea>
-          </div>
-          <div class="emoji_image_box">
+            id="messages_form" autocomplete="off">
+            <div class="input_area">
+                <textarea name="" placeholder="Aa" @keyup.enter="sendMessages" @keydown="canNotSendOnlySpace"
+                ref="textarea"  v-model="text"   >
+                </textarea>
+            </div>
+            <div class="button_area">
             <button id="send_text_btn" @click="sendMessages">
-              <img class="sendtext_btn" src="../assets/send-button.svg" alt="button image">
+                <img class="sendtext_btn" src="../assets/send-button.svg" alt="button image">
             </button>
-            <div id="images_upload">
-              <form @submit.prevent id="images_upload_form" >
+            <form @submit.prevent id="images_upload_form" >
                 <label>
                     <img src="../assets/image.svg" alt="">
                     <input type="file"  class="uploadImages" accept="image/*"  @change="UploadImages" >
                 </label>
-              </form>
-            </div>
+            </form>
             <div id="emoji_icon" @click="openEmoji" >
             </div>
-          </div>
+            </div>
         </form>
-        <div  v-if="show" class="emoji">
+        <div  v-if="show" class="emoji_box">
           <emoji @onEmojiClick = appendEmojiToText />
         </div>
       </footer>
@@ -138,6 +136,15 @@ export default defineComponent({
 </script>
 
 <style scoped>
+footer {
+    width: 100%;
+    height: 23vh;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    display: grid;
+    place-items: center;
+}
+
 #messages_form {
     width: 100%;
     display: flex;
@@ -146,7 +153,7 @@ export default defineComponent({
     align-items: center;
     position: relative;
 }
-.input_box {
+.input_area {
     width: 100%;
     height: 18vh;
     padding: 0.5rem ;
@@ -168,11 +175,11 @@ textarea {
     outline: none;
     border: none;
 }
-.emoji_image_box {
-    width: 10%;
+.button_area {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     position: absolute;
     bottom: 0.5rem;
     left: 0.5rem;
@@ -188,6 +195,7 @@ textarea {
     width: 1rem;
     height: 1rem;
     cursor: pointer;
+    margin-right: 1rem;
 }
 .uploadImages {
     display: none;
@@ -200,9 +208,17 @@ textarea {
 #emoji_icon:hover {
     background-image: url('../assets/hfemoji.svg');
 }
-.emoji {
+.emoji_box {
     position: absolute;
-    right: 2.5rem;
-    bottom: 5.5rem;
+    right: 1.5rem;
+    bottom: 8.5rem;
+}
+
+@media screen and (max-width : 700px) {
+    .emoji_box {
+        position: absolute;
+        right: 0;
+        bottom: 11rem;
+    }
 }
 </style>

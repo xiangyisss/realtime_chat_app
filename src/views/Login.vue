@@ -1,20 +1,22 @@
 <template>
   <div id='login'>
-    <h1>Real time chat</h1>
+    <h1>Real time web chat</h1>
     <div class="avatar">
-      <button class="arrow_btn" @click="before" ><img class="arrow arrow_left" src="../assets/left.svg" alt="left" ></button>
+      <button class="arrow_btn" @click="previousAvatar" ><img class="arrow arrow_left" src="../assets/left.svg" alt="left" ></button>
+
       <div v-for="i in [currentIndex]" :key="i" id="avatar">
         <img :src="currentImg" alt="" />
       </div>
-      <button class="arrow_btn" @click="next" ><img class="arrow arrow_right" src="../assets/left.svg" alt="right"></button>
+      <button class="arrow_btn" @click="nextAvatar" ><img class="arrow arrow_right" src="../assets/left.svg" alt="right"></button>
     </div>
     <form @submit.prevent='login' autocomplete="off">
       <label for="name">
         <input type="text" name="name" class="input_username" placeholder='Enter your user name' v-model='inputUserName' required>
       </label>
-      <!-- <input type="submit" value="Login"> -->
+
       <button class="login_btn">Login</button>
     </form>
+
   </div>
 </template>
 
@@ -23,6 +25,9 @@ import {
   defineComponent, ref, Ref,
 } from 'vue';
 import { useRouter } from 'vue-router';
+// import firebase from 'firebase';
+
+
 
 
 // interface data {
@@ -55,24 +60,27 @@ export default defineComponent({
 
 
     const images = [
-        'https://cdn-icons-png.flaticon.com/512/3135/3135789.png',
+        'https://cdn-icons-png.flaticon.com/512/194/194938.png',
         'https://cdn-icons-png.flaticon.com/512/147/147140.png',
+        'https://cdn-icons-png.flaticon.com/512/706/706837.png',
+        'https://cdn-icons-png.flaticon.com/512/706/706814.png',
         'https://cdn-icons-png.flaticon.com/512/194/194932.png',
         'https://cdn-icons-png.flaticon.com/512/147/147144.png',
-        'https://cdn-icons-png.flaticon.com/512/194/194938.png',
-        'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+        'https://cdn-icons-png.flaticon.com/512/3135/3135789.png',
     ];
     let currentIndex = 0;
     const currentImg = ref();
     const currentImage = () => {
       currentImg.value = images[Math.abs(currentIndex) % images.length];
+      // console.log('ok', currentImg.value);
+      return currentImg;
     };
     currentImage();
-    const next = () => {
+    const nextAvatar = () => {
        currentIndex += 1;
       currentImage();
     };
-    const before = () => {
+    const previousAvatar = () => {
       currentIndex -= 1;
       currentImage();
     };
@@ -86,15 +94,40 @@ export default defineComponent({
         inputUserName.value = '';
       }
     };
+
+    // const credential = ref();
+    // const token = ref();
+    // const user = ref();
+    // const signinWithGoogle = async () => {
+    //   const provider = new firebase.auth.GoogleAuthProvider();
+    //   provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    //   firebase.auth()
+    //   .signInWithPopup(provider)
+    //   .then((result) => {
+    //     credential.value = result.credential;
+    //     token.value = credential.value.accessToken;
+    //     user.value = result.user;
+    //   })
+    //   .catch((error) => {
+    //     // const errorCode = error.code;
+    //     // const errorMessage = error.message;
+    //     // const { email } = error;
+    //     // const { credential } = error
+    //     console.log('Error messages :', error.message);
+    //   });
+    //   firebase.auth().signInWithRedirect(provider);
+    // };
+
     return {
       inputUserName,
       login,
-      before,
-      next,
+      previousAvatar,
+      nextAvatar,
       currentImage,
       currentIndex,
       images,
       currentImg,
+      // signinWithGoogle,
     };
   },
 });
@@ -126,9 +159,9 @@ h1 {
   margin-bottom: 2rem;
 }
 
-#avatar img{
-  width: 3.25rem;
-  height: 3.25rem;
+#avatar img {
+  width: 5rem;
+  height: 5rem;
 }
 
 .arrow {
@@ -141,12 +174,16 @@ h1 {
 }
 
 form {
+  width: 50%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 input, .login_btn {
   width: 15rem;
+  max-width: 15rem;
   border: none;
   outline: none;
   height: 2.5rem;
@@ -180,11 +217,11 @@ input, .login_btn {
 .arrow_btn {
   outline: none;
   border: none;
-  height: 2.5rem;
+  height: 2.25rem;
   border-radius: 4px;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  background: none;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  background: transparent;
 }
 
 

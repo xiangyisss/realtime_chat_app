@@ -53,12 +53,6 @@ export default defineComponent({
                 });
                 allMessages.value = data;
             });
-            // const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`).orderBy('timestamp');
-            // query.onSnapshot((snapShot : any) => {
-            //     snapShot.forEach((doc : any) => {
-            //         allMessages.value.push(doc.data());
-            //     });
-            // });
         };
         const scrollToBottom = () => {
             chatbox.value.scrollTop = chatbox.value.scrollHeight;
@@ -80,21 +74,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
-.chatbox {
+section {
+    padding: 0 1.5rem 0 1.5rem;
+    background-color: rgba(221, 160, 221, 0.068);
     overflow-x: hidden;
-    overflow-y: auto;
     width: 100%;
     height: 70vh;
-    /* scroll-behavior: smooth; */
     padding-top: 1rem;
 }
+
+
 #messages_container {
     display: flex;
     margin-bottom: 1.5rem;
     max-width: 60%;
     width:fit-content;
-    height:fit-content;
+    /* height:fit-content; */
     border-radius: 4px;
     position: relative;
 }
@@ -132,12 +127,16 @@ export default defineComponent({
 }
 #images_container {
     background-color: #fff;
+    max-width: 18rem;
+    max-height: 12rem;
 }
 
 #images_container img {
-    object-fit: cover;
-    max-width: 300px;
-    max-height: 200px;
+    /* object-fit: cover; */
+    width: 100%;
+    height: 100%;
+    max-width: 18rem;
+    max-height: 12rem;
 }
 .sentMsgStyle {
     background: #0c33f5c9;
@@ -146,12 +145,21 @@ export default defineComponent({
     border-radius: 10px 0 10px 10px;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
-
+.receiveMsgStyle {
+    color: rgb(29, 28, 28);
+    background: rgba(230, 225, 225, 0.116);
+    margin-right: auto;
+    border-radius: 0 10px 10px 10px;
+    box-shadow: rgba(214, 213, 213, 0.12) 0px 1px 3px, rgba(73, 73, 73, 0.24) 0px 1px 2px;
+}
 .sentMsgStyleToRight {
     margin-left: auto;
     display: flex;
     flex-direction: row-reverse;
     justify-content: flex-end;
+}
+.receiveMsgStyleLeft {
+    margin-right: auto;
 }
 .sentMsgStyleToMargin {
     margin-right: 0;
@@ -164,15 +172,6 @@ export default defineComponent({
 .sentMsgStyleDirection {
      align-items: flex-end !important;
 }
-.receiveMsgStyleLeft {
-    margin-right: auto;
-}
-.receiveMsgStyle {
-    color: rgb(29, 28, 28);
-    background: rgba(230, 225, 225, 0.116);
-    margin-right: auto;
-    border-radius: 0 10px 10px 10px;
-    box-shadow: rgba(214, 213, 213, 0.12) 0px 1px 3px, rgba(73, 73, 73, 0.24) 0px 1px 2px;
-}
+
 
 </style>

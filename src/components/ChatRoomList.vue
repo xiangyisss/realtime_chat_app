@@ -3,17 +3,16 @@
         <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname, i)" >
             <li :class="currentIndex === i && 'active'">{{roomname}}</li>
         </ul>
-        <div>{{currentRoom[currentIndex]}}</div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-// import { useStore } from 'vuex';
+
 
 
 export default defineComponent({
-    name: 'Chatrooms',
+    name: 'ChatRoomList',
     setup(props, { emit }) {
         // const store = useStore();
         const currentRoom = ['Public chat', 'Suzy', 'Mario'];
@@ -36,31 +35,26 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.test {
-    color: red;
+.chatroom {
+    width: 100%;
+    height: 2.5rem;
+    background-color: #fff;
 }
+.active {
+    background-color: rgba(49, 14, 95, 0.726);
+    /* background-color: #0c33f5c9; */
+    color: rgb(238, 228, 228);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+    transition: all 0.3s;
+}
+
 ul {
     list-style: none;
     padding: 0;
 }
-
-.chatroom {
-    width: 100%;
-    height: 2.5rem;
-}
-.active {
-    background-color: rgba(168, 119, 119, 0.445);
-}
-/* .roomlist::after {
-    content: ' ';
-    width: 4px;
-    height: 2.5rem;
-    background-color: plum;
-    position: absolute;
-    top: 0;
-    left: 0;
-} */
 .roomlist li {
+    /* width: 10rem; */
+    width: 100%;
     line-height: 2.5rem;
     text-align: left;
     font-weight: 600;

@@ -21,6 +21,7 @@ module.exports = {
     'max-len': 'off',
     '@typescript-eslint/no-explicit-any': "off",
     '@typescript-eslint/no-non-null-assertion': 'off',
+    // '@typescript-eslint/no-var-requires': 0,
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
     'no-multiple-empty-lines': [2, { max: 99999, maxEOF: 0 }],

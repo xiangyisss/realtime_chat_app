@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar">
+    <header>
           <p class="title">Chat board</p>
           <button @click="logout" type="button" >Log out</button>
       </header>
@@ -10,7 +10,7 @@ import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
-    name: 'MenuBar',
+    name: 'TopMenuBar',
     setup() {
         const router = useRouter();
         const logout = () => {
@@ -25,15 +25,25 @@ export default defineComponent({
 
 <style scoped>
 header {
-    height: 8vh;
+    width: 100%;
+    height: 7vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 1rem; */
     border-bottom: 1px solid rgba(143, 135, 135, 0.151);
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 0.5rem 0 0.5rem 0;
+
+}
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-left: 2rem;
+    margin-bottom: 0;
 }
 header button {
-    margin-right: 1rem;
+    margin-right: 2rem;
     background-color: transparent;
     border: 1px solid plum;
     border-radius: 4px;
@@ -44,13 +54,18 @@ header button {
 
 header button:hover {
     background-color: #734b6d8c;
-    transition: all 0.5s;
+    transition: all 0.2s;
     color: #fff;
 }
-.title {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-    padding-left: 4rem;
+
+@media (max-width : 700px) {
+    .title {
+        font-size: 1rem;
+    }
+    header button {
+        width: 4rem;
+        height: 1.6rem;
+        font-size: 0.8rem;
+    }
 }
 </style>

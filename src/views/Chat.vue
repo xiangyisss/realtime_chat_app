@@ -1,9 +1,9 @@
 <template>
   <div id='chat_container'>
-      <menu-bar />
-      <side-menu :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName"/>
-      <chat-box :userName="userName" :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
-      <input-box :userName="userName"  :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
+      <top-menu-bar class="topmenu_bar" />
+      <side-menu class="sidemenu" :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName"/>
+      <chat-box class="chatbox" :userName="userName" :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
+      <input-box class="inputbox" :userName="userName"  :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import {
  defineComponent, ref,
 } from 'vue';
 
-import MenuBar from '@/components/MenuBar.vue';
+import TopMenuBar from '@/components/TopMenuBar.vue';
 import SideMenu from '@/components/SideMenu.vue';
 import InputBox from '@/components/InputBox.vue';
 import ChatBox from '@/components/ChatBox.vue';
@@ -25,7 +25,7 @@ import ChatBox from '@/components/ChatBox.vue';
 
 export default defineComponent({
   components: {
-    MenuBar, SideMenu, InputBox, ChatBox,
+    TopMenuBar, SideMenu, InputBox, ChatBox,
   },
   props: { userName: String, currentUserAvatar: String },
   name: 'Chat',
@@ -44,22 +44,21 @@ export default defineComponent({
   margin-bottom: 0;
 }
 
-.navbar {
+.topmenu_bar {
   grid-area: header;
 }
-.sideMenu {
+.sidemenu {
   grid-area: aside;
 }
 .chatbox {
   grid-area: section;
 }
-.typing_area {
+.inputbox {
   grid-area: footer;
 }
 #chat_container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: auto;
   grid-template-areas:
   'header header header header header'
   'aside section section section section'
@@ -67,46 +66,19 @@ export default defineComponent({
   ;
   width: 100%;
   height: 100vh;
-  /* background-color: rgb(20, 20, 20); */
-}
-header {
-  height: 8vh;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* padding: 1rem; */
-  border-bottom: 1px solid rgba(143, 135, 135, 0.151);
 }
 
-aside {
-  border-right: 1px solid rgba(143, 135, 135, 0.151);
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-}
-section {
-  padding: 0 1.5rem 0 1.5rem;
-  background-color: rgba(221, 160, 221, 0.068);
-}
-
-footer {
-  height: 22vh;
-  width: 100%;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  /* margin-top: 1rem; */
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  position: relative;
-}
-
-@media screen and (max-width : 800px) {
+@media (max-width : 700px) {
   #chat_container {
-    background-color: plum;
-    display: flex;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+    'header header '
+    'section section '
+    'footer footer'
+    ;
+  }
+  .sidemenu {
+    display: none;
   }
 }
 </style>

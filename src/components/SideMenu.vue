@@ -2,23 +2,22 @@
     <aside class="sideMenu">
         <div class="personalInfo">
             <img :src="currentUserAvatar" alt="icon">
-            <p>{{userName}}</p>
         </div>
-            <div class="mychat_menu">
-                <img src="../assets/arrow.svg" alt="icon">
-                <p>My chats</p>
-            </div>
-            <chat-rooms @roomNameToParent="roomName($event)"/>
-      </aside>
+        <!-- <div class="mychat_menu">
+            <img src="../assets/arrow.svg" alt="icon">
+            <p>My chat room</p>
+        </div> -->
+        <ChatRoomList @roomNameToParent="roomName($event)"/>
+    </aside>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import ChatRooms from './ChatRooms.vue';
+import ChatRoomList from './ChatRoomList.vue';
 
 
 export default defineComponent({
-  components: { ChatRooms },
+  components: { ChatRoomList },
     name: 'SideMenu',
     props: { userName: String, currentUserAvatar: String },
     setup(props, { emit }) {
@@ -33,25 +32,33 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+aside {
+  border-right: 1px solid rgba(143, 135, 135, 0.151);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
 .personalInfo {
     width: 100%;
     height: 20%;
     display: flex;
     justify-content: center;
-    align-items:  flex-end;
+    align-items:  center;
     border-bottom: 1px solid rgb(230, 229, 229);
 }
 .personalInfo img {
     width: 60px;
     height: 60px;
     border-radius: 100%;
-    margin-bottom: 1.5rem;
+    /* margin-bottom: 1.5rem; */
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-    margin-top: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .character {
     font-size: 40px;
     font-weight: 500;
@@ -75,25 +82,5 @@ export default defineComponent({
     font-weight: 600;
     margin: 0;
 }
-/* .chatroom_list {
-    width: 100%;
-    height: 2.5rem;
-    background-color: rgba(238, 235, 235, 0.445);
-    position: relative;
-}
-.chatroom_list::after {
-    content: ' ';
-    width: 4px;
-    height: 2.5rem;
-    background-color: plum;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-.chatroom_list p {
-    line-height: 2.5rem;
-    text-align: left;
-    padding-left: 2rem;
-    font-weight: 600;
-} */
+
 </style>
