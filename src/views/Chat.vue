@@ -1,6 +1,7 @@
 <template>
   <div id='chat_container'>
-      <top-menu-bar class="topmenu_bar" />
+      <top-menu-bar class="topmenu_bar" v-if="windowWidth > 700"/>
+      <mobile-version-menu class="mobilemenu_bar" v-if="windowWidth < 700" @roomNameToParent="roomName"/>
       <side-menu class="sidemenu" :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName"/>
       <chat-box class="chatbox" :userName="userName" :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
       <input-box class="inputbox" :userName="userName"  :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
@@ -9,13 +10,15 @@
 
 <script lang="ts">
 import {
- defineComponent, ref,
+ defineComponent, ref, onMounted,
 } from 'vue';
 
 import TopMenuBar from '@/components/TopMenuBar.vue';
 import SideMenu from '@/components/SideMenu.vue';
 import InputBox from '@/components/InputBox.vue';
 import ChatBox from '@/components/ChatBox.vue';
+import MobileVersionMenu from '@/components/MobileVersionMenu.vue';
+
 
 // interface style {
 //   backgroundColor: string,
@@ -25,7 +28,11 @@ import ChatBox from '@/components/ChatBox.vue';
 
 export default defineComponent({
   components: {
-    TopMenuBar, SideMenu, InputBox, ChatBox,
+    TopMenuBar,
+    SideMenu,
+    InputBox,
+    ChatBox,
+    MobileVersionMenu,
   },
   props: { userName: String, currentUserAvatar: String },
   name: 'Chat',
@@ -34,7 +41,14 @@ export default defineComponent({
     const roomName = (name : any) => {
             roomdata.value = name;
         };
-    return { roomName, roomdata };
+    const windowWidth = ref(window.innerWidth);
+    const widthChange = () => {
+        windowWidth.value = window.innerWidth;
+    };
+    onMounted(() => {
+        window.addEventListener('resize', widthChange);
+    });
+    return { roomName, roomdata, windowWidth };
   },
 });
 </script>
@@ -43,7 +57,9 @@ export default defineComponent({
 * p {
   margin-bottom: 0;
 }
-
+.mobilemenu_bar {
+  grid-area: header;
+}
 .topmenu_bar {
   grid-area: header;
 }
@@ -70,11 +86,11 @@ export default defineComponent({
 
 @media (max-width : 700px) {
   #chat_container {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     grid-template-areas:
-    'header header '
-    'section section '
-    'footer footer'
+    'header  '
+    'section  '
+    'footer '
     ;
   }
   .sidemenu {

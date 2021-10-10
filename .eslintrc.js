@@ -26,5 +26,13 @@ module.exports = {
     semi: ['error', 'always'],
     'no-multiple-empty-lines': [2, { max: 99999, maxEOF: 0 }],
     indent: 'off',
+    // "editor.codeActionsOnSave": {
+    //   // For ESLint
+    //   "source.fixAll.eslint": true,
+    //   // For TSLint
+    //   "source.fixAll.tslint": true,
+    //   // For Stylelint
+    //   "source.fixAll.stylelint": true
+    // },
   },
 };

@@ -3,10 +3,6 @@
         <div class="personalInfo">
             <img :src="currentUserAvatar" alt="icon">
         </div>
-        <!-- <div class="mychat_menu">
-            <img src="../assets/arrow.svg" alt="icon">
-            <p>My chat room</p>
-        </div> -->
         <ChatRoomList @roomNameToParent="roomName($event)"/>
     </aside>
 </template>

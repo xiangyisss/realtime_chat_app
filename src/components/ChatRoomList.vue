@@ -14,7 +14,6 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
     name: 'ChatRoomList',
     setup(props, { emit }) {
-        // const store = useStore();
         const currentRoom = ['Public chat', 'Suzy', 'Mario'];
         const currentIndex = ref(0);
         const currentRoomName = ref('Public chat');
@@ -41,7 +40,7 @@ export default defineComponent({
     background-color: #fff;
 }
 .active {
-    background-color: rgba(49, 14, 95, 0.726);
+    background-color: rgba(108, 59, 172, 0.644);
     /* background-color: #0c33f5c9; */
     color: rgb(238, 228, 228);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
@@ -53,7 +52,6 @@ ul {
     padding: 0;
 }
 .roomlist li {
-    /* width: 10rem; */
     width: 100%;
     line-height: 2.5rem;
     text-align: left;

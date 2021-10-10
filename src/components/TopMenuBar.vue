@@ -1,8 +1,9 @@
 <template>
     <header>
-          <p class="title">Chat board</p>
-          <button @click="logout" type="button" >Log out</button>
-      </header>
+        <p class="title">Chat board</p>
+        <button @click="logout" type="button" >Log out</button>
+        <!-- <mobile-version-menu @roomNameToParent="roomName"/> -->
+    </header>
 </template>
 
 <script lang="ts">
@@ -14,10 +15,15 @@ export default defineComponent({
     setup() {
         const router = useRouter();
         const logout = () => {
-        router.push({
-            name: 'Login',
-        });
+            router.push({
+                name: 'Login',
+            });
         };
+        // const currentRoomName = ref('');
+        // const roomName = (name : any) => {
+        //     currentRoomName.value = name;
+        //     emit('roomNameToParent', currentRoomName.value);
+        // };
         return { logout };
     },
 });
@@ -34,7 +40,6 @@ header {
     background-color: #fff;
     margin: 0 auto;
     padding: 0.5rem 0 0.5rem 0;
-
 }
 .title {
     font-size: 1.25rem;
