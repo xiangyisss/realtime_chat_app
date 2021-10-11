@@ -21,6 +21,7 @@
             </div>
             </div>
         </form>
+        <!-- <div v-if="!notImage">Only could upload image file.</div> -->
         <div  v-if="show" class="emoji_box">
           <emoji @onEmojiClick = appendEmojiToText />
         </div>
@@ -102,10 +103,12 @@ export default defineComponent({
                 getImagesUrlToDatabase(storageRef);
                 });
         };
+        // const notImage = ref(true);
         const checkImagesType = (event : any) => {
             const testFile = event.target.files[0].type;
                 if (!testFile.match('image.*')) {
                     return console.log('Only can upload images');
+                    // notImage.value = false;
                 }
             return true;
         };

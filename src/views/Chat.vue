@@ -35,7 +35,7 @@ export default defineComponent({
     MobileVersionMenu,
   },
   props: { userName: String, currentUserAvatar: String },
-  name: 'Chat',
+  name: 'ChatPage',
   setup() {
     const roomdata = ref('Public chat');
     const roomName = (name : any) => {

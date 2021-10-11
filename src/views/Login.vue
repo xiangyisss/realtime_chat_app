@@ -1,6 +1,6 @@
 <template>
   <div id='login'>
-    <h1>Real time web chat</h1>
+    <h1>Real time <span> web </span>  chat</h1>
     <div class="avatar">
       <button class="arrow_btn" @click="previousAvatar" ><img class="arrow arrow_left" src="../assets/left.svg" alt="left" ></button>
 
@@ -88,7 +88,7 @@ export default defineComponent({
     const login = () => {
       if (inputUserName.value) {
         router.push({
-          name: 'groupchat',
+          name: 'ChatPage',
           params: { userName: inputUserName.value, currentUserAvatar: currentImg.value },
         });
         inputUserName.value = '';
@@ -224,5 +224,10 @@ input, .login_btn {
   background: transparent;
 }
 
-
+/* span::before {
+  content: '"';
+}
+span::after {
+  content: '"';
+} */
 </style>

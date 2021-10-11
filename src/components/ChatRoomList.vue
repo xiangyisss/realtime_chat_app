@@ -14,7 +14,7 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
     name: 'ChatRoomList',
     setup(props, { emit }) {
-        const currentRoom = ['Public chat', 'Suzy', 'Mario'];
+        const currentRoom = ['Suzy', 'Inna', 'Teddy'];
         const currentIndex = ref(0);
         const currentRoomName = ref('Public chat');
         const sendRoomNameToParent = (name : any, index : any) => {

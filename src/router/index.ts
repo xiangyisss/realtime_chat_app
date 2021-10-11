@@ -13,8 +13,8 @@ const routes: Array<RouteRecordRaw> = [
 
   },
   {
-    path: '/groupchat_page',
-    name: 'groupchat',
+    path: '/chatpage',
+    name: 'ChatPage',
     component: Chat,
     props: true,
   },

@@ -63,11 +63,11 @@ export default defineComponent({
         onUpdated(() => {
             scrollToBottom();
         });
-        watch(() => props.roomname, (first) => {
-            loadAllMessages(first);
+        loadAllMessages(props.roomname);
+        watch(() => props.roomname, (newroom) => {
+            loadAllMessages(newroom);
             allMessages.value = [];
         });
-        loadAllMessages(props.roomname);
         return { scrollToBottom, allMessages, chatbox };
     },
 });

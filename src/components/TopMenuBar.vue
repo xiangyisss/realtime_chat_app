@@ -19,11 +19,6 @@ export default defineComponent({
                 name: 'Login',
             });
         };
-        // const currentRoomName = ref('');
-        // const roomName = (name : any) => {
-        //     currentRoomName.value = name;
-        //     emit('roomNameToParent', currentRoomName.value);
-        // };
         return { logout };
     },
 });
