@@ -1,8 +1,9 @@
 <template>
     <div class="chatroom">
-        <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname, i)" >
+        <!-- <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname, i)" >
             <li :class="currentIndex === i && 'active'">{{roomname}}</li>
-        </ul>
+        </ul> -->
+        <p class="roomtitle">Public Chat Room</p>
     </div>
 </template>
 
@@ -36,7 +37,7 @@ export default defineComponent({
 <style scoped>
 .chatroom {
     width: 100%;
-    height: 2.5rem;
+    /* height: 2.5rem; */
     background-color: #fff;
 }
 .active {
@@ -46,8 +47,12 @@ export default defineComponent({
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
     transition: all 0.3s;
 }
+.roomtitle {
+    line-height: 2.5rem;
+    font-weight: 600;
+}
 
-ul {
+/* ul {
     list-style: none;
     padding: 0;
 }
@@ -59,5 +64,5 @@ ul {
     padding-left: 2rem;
     margin-bottom: 0.5rem;
     cursor: pointer;
-}
+} */
 </style>

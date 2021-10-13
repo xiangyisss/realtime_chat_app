@@ -2,6 +2,7 @@
     <aside class="sideMenu">
         <div class="personalInfo">
             <img :src="currentUserAvatar" alt="icon">
+            <p class="username">{{userName}}</p>
         </div>
         <ChatRoomList @roomNameToParent="roomName($event)"/>
     </aside>
@@ -55,6 +56,10 @@ aside {
     align-items: center;
 }
 
+.username {
+    margin: 1rem;
+    text-transform: uppercase;
+}
 .character {
     font-size: 40px;
     font-weight: 500;
