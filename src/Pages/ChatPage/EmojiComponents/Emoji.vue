@@ -11,15 +11,12 @@ export default defineComponent({
     components: { VuemojiPicker },
     setup(props, { emit }) {
         const eventDetail : Ref<string> = ref('');
-
         const onEmojiClick = (detail: EmojiClickEventDetail) => {
             const emojis = detail.unicode!;
             emit('onEmojiClick', emojis);
         };
-
         return { onEmojiClick, eventDetail };
     },
-
     });
 
 </script>

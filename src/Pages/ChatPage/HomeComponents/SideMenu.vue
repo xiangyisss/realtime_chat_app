@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import ChatRoomList from './ChatRoomList.vue';
+import ChatRoomList from '../../../components/ChatRoomList.vue';
 
 
 export default defineComponent({
@@ -49,13 +49,11 @@ aside {
     width: 60px;
     height: 60px;
     border-radius: 100%;
-    /* margin-bottom: 1.5rem; */
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .username {
     margin: 1rem;
     text-transform: uppercase;
@@ -83,5 +81,4 @@ aside {
     font-weight: 600;
     margin: 0;
 }
-
 </style>

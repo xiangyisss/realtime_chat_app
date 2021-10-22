@@ -9,11 +9,11 @@
             </div>
             <div class="button_area">
             <button id="send_text_btn" @click="sendMessages">
-                <img class="sendtext_btn" src="../assets/send-button.svg" alt="button image">
+                <img class="sendtext_btn" src="../../../assets/send-button.svg" alt="button image">
             </button>
             <form @submit.prevent id="images_upload_form" >
                 <label>
-                    <img src="../assets/image.svg" alt="">
+                    <img src="../../../assets/image.svg" alt="">
                     <input type="file"  class="uploadImages" accept="image/*"  @change="UploadImages" >
                 </label>
             </form>
@@ -33,8 +33,8 @@ import {
  defineComponent, ref, Ref,
 } from 'vue';
 import firebase from 'firebase';
-import database from '../db';
-import Emoji from '@/components/Emoji.vue';
+import database from '../../../db';
+import Emoji from '../EmojiComponents/Emoji.vue';
 
 export default defineComponent({
     name: 'InputBox',
@@ -56,14 +56,12 @@ export default defineComponent({
                 timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
             });
             text.value = '';
-            // textarea.value.style.height = '';
         };
         const sendMessages = () => {
             const checkIfOnlySpace = text.value.trim();
                 if (checkIfOnlySpace !== '') {
                     saveMessagesToDatabase();
                 } else {
-                    // alert('Can not send blank space');
                     console.log();
                 }
         };
@@ -72,11 +70,6 @@ export default defineComponent({
                 event.preventDefault();
             }
         };
-        // const changeHeight = () => {
-        //     textarea.value.style.height = `${textarea.value!.scrollHeight}px`;
-        // };
-
-
         const getImagesUrlToDatabase = (storageRef : any) => {
             storageRef.getDownloadURL().then((downloadURL: any) => {
                 database.firestore().collection('messages').add({
@@ -91,11 +84,9 @@ export default defineComponent({
         };
         const saveImagesToStorage = (event : any) => {
             const imageData = event.target.files[0];
-            // checkUploadFileType(event);
             const metadata = {
                 contentType: `${event.target.files[0].type}`,
             };
-            // Get random number
             const Uid = Math.random().toString(16).slice(2);
             const storageRef = firebase.storage().ref(`images/${Uid + imageData.name}`);
             return storageRef.put(imageData, metadata)
@@ -103,12 +94,10 @@ export default defineComponent({
                 getImagesUrlToDatabase(storageRef);
                 });
         };
-        // const notImage = ref(true);
         const checkImagesType = (event : any) => {
             const testFile = event.target.files[0].type;
                 if (!testFile.match('image.*')) {
                     return console.log('Only can upload images');
-                    // notImage.value = false;
                 }
             return true;
         };
@@ -204,12 +193,12 @@ textarea {
     display: none;
 }
 #emoji_icon {
-    background-image: url('../assets/he-moji.svg');
+    background-image: url('../../../assets/he-moji.svg');
     background-repeat:no-repeat;
     background-size:contain;
 }
 #emoji_icon:hover {
-    background-image: url('../assets/hfemoji.svg');
+    background-image: url('../../../assets/hfemoji.svg');
 }
 .emoji_box {
     position: absolute;

@@ -4,8 +4,6 @@
         <div class="homebutton"  @click="toggleMenu"></div>
     </div>
     <div class="chatroom" :class="active ? 'activeClass' : '' ">
-    <!-- <div class="chatroom" v-if="active" ref="sidebar"> -->
-
         <ul class="roomlist" v-for="roomname, i in currentRoom" :key="roomname.index"  @click="sendRoomNameToParent(roomname, i)" >
             <li :class="currentIndex === i && 'active'" @click="closeMenu">{{roomname}}  </li>
         </ul>
@@ -28,7 +26,6 @@ export default defineComponent({
         const sendRoomNameToParent = (name : any, index : any) => {
             currentRoomName.value = name;
             currentIndex.value = index;
-            // console.log('currentRoomName:', currentRoomName.value);
             emit('roomNameToParent', currentRoomName.value);
         };
         const logout = () => {
@@ -42,7 +39,6 @@ export default defineComponent({
         const closeMenu = () => {
             active.value = false;
         };
-
         return {
             currentRoom,
             currentIndex,
@@ -76,7 +72,7 @@ p {
 .homebutton {
     width: 1.5rem;
     height: 1.5rem;
-    background-image: url('../assets/home.svg');
+    background-image: url('../../../assets/home.svg');
     cursor: pointer;
     margin-right: 2rem;
 }
@@ -92,7 +88,6 @@ p {
     display: none;
     transform:translateX(100%);
 }
-/*transition not working */
 .activeClass {
     display: block;
     opacity: 1;
@@ -105,7 +100,6 @@ p {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
     transition: all 0.3s;
 }
-
 ul {
     list-style: none;
     padding: 0;
@@ -125,5 +119,4 @@ button {
     color: #2c3e50 ;
     font-weight: 700;
 }
-
 </style>

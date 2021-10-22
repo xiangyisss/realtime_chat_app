@@ -1,7 +1,7 @@
 <template>
   <div id='chat_container'>
-      <!-- <top-menu-bar class="topmenu_bar" v-if="windowWidth > 700"/>
-      <mobile-version-menu class="mobilemenu_bar" v-if="windowWidth < 700" @roomNameToParent="roomName"/> -->
+      <!-- <top-menu-bar class="topmenu_bar" v-if="windowWidth > 700"/> -->
+      <mobile-version-menu class="mobilemenu_bar" v-if="windowWidth < 700" @roomNameToParent="roomName"/>
       <top-menu-bar class="topmenu_bar" />
       <side-menu class="sidemenu" :userName="userName"  :currentUserAvatar ="currentUserAvatar" @roomNameToParent="roomName"/>
       <chat-box class="chatbox" :userName="userName" :currentUserAvatar ="currentUserAvatar" :roomname ="roomdata" />
@@ -14,18 +14,11 @@ import {
  defineComponent, ref, onMounted,
 } from 'vue';
 
-import TopMenuBar from '@/components/TopMenuBar.vue';
-import SideMenu from '@/components/SideMenu.vue';
-import InputBox from '@/components/InputBox.vue';
-import ChatBox from '@/components/ChatBox.vue';
-// import MobileVersionMenu from '@/components/MobileVersionMenu.vue';
-
-
-// interface style {
-//   backgroundColor: string,
-//   color: string,
-//   float: string,
-// }
+import TopMenuBar from '@/Pages/ChatPage/HomeComponents/TopMenuBar.vue';
+import SideMenu from '@/Pages/ChatPage/HomeComponents/SideMenu.vue';
+import InputBox from '@/Pages/ChatPage/HomeComponents/InputBox.vue';
+import ChatBox from '@/Pages/ChatPage/HomeComponents/ChatBox.vue';
+import MobileVersionMenu from '@/Pages/ChatPage/MobileVersionComponents/MobileVersionMenu.vue';
 
 export default defineComponent({
   components: {
@@ -33,7 +26,7 @@ export default defineComponent({
     SideMenu,
     InputBox,
     ChatBox,
-    // MobileVersionMenu,
+    MobileVersionMenu,
   },
   props: { userName: String, currentUserAvatar: String },
   name: 'ChatPage',

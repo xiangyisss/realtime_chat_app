@@ -2,21 +2,18 @@
   <div id='login'>
     <h1>Real time <span> web </span>  chat</h1>
     <div class="avatar">
-      <button class="arrow_btn" @click="previousAvatar" ><img class="arrow arrow_left" src="../assets/left.svg" alt="left" ></button>
-
+      <button class="arrow_btn" @click="previousAvatar" ><img class="arrow arrow_left" src="../../assets/left.svg" alt="left" ></button>
       <div v-for="i in [currentIndex]" :key="i" id="avatar">
         <img :src="currentImg" alt="" />
       </div>
-      <button class="arrow_btn" @click="nextAvatar" ><img class="arrow arrow_right" src="../assets/left.svg" alt="right"></button>
+      <button class="arrow_btn" @click="nextAvatar" ><img class="arrow arrow_right" src="../../assets/left.svg" alt="right"></button>
     </div>
     <form @submit.prevent='login' autocomplete="off">
       <label for="name">
         <input type="text" name="name" class="input_username" placeholder='Enter your user name' v-model='inputUserName' required>
       </label>
-
       <button class="login_btn">Login</button>
     </form>
-
   </div>
 </template>
 
@@ -25,40 +22,13 @@ import {
   defineComponent, ref, Ref,
 } from 'vue';
 import { useRouter } from 'vue-router';
-// import firebase from 'firebase';
 
-
-
-
-// interface data {
-//   userName: string,
-//   messages: string[]
-// }
 
 export default defineComponent({
   name: 'Login',
   setup() {
     const router = useRouter();
     const inputUserName : Ref<string> = ref('');
-    // const state : data = reactive({
-    //   userName: '',
-    //   messages: [],
-    // });
-
-    /*
-
-  if (true or false)
-
-    0 is false
-    '' is false
-    null is false
-    undefined is false
-
-    if(value) => as long as not [0, '', null, undefined]
-
-    */
-
-
     const images = [
         'https://cdn-icons-png.flaticon.com/512/194/194938.png',
         'https://cdn-icons-png.flaticon.com/512/147/147140.png',
@@ -72,7 +42,6 @@ export default defineComponent({
     const currentImg = ref();
     const currentImage = () => {
       currentImg.value = images[Math.abs(currentIndex) % images.length];
-      // console.log('ok', currentImg.value);
       return currentImg;
     };
     currentImage();
@@ -84,7 +53,6 @@ export default defineComponent({
       currentIndex -= 1;
       currentImage();
     };
-
     const login = () => {
       if (inputUserName.value) {
         router.push({
@@ -94,30 +62,6 @@ export default defineComponent({
         inputUserName.value = '';
       }
     };
-
-    // const credential = ref();
-    // const token = ref();
-    // const user = ref();
-    // const signinWithGoogle = async () => {
-    //   const provider = new firebase.auth.GoogleAuthProvider();
-    //   provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    //   firebase.auth()
-    //   .signInWithPopup(provider)
-    //   .then((result) => {
-    //     credential.value = result.credential;
-    //     token.value = credential.value.accessToken;
-    //     user.value = result.user;
-    //   })
-    //   .catch((error) => {
-    //     // const errorCode = error.code;
-    //     // const errorMessage = error.message;
-    //     // const { email } = error;
-    //     // const { credential } = error
-    //     console.log('Error messages :', error.message);
-    //   });
-    //   firebase.auth().signInWithRedirect(provider);
-    // };
-
     return {
       inputUserName,
       login,
@@ -127,7 +71,6 @@ export default defineComponent({
       currentIndex,
       images,
       currentImg,
-      // signinWithGoogle,
     };
   },
 });
@@ -223,11 +166,4 @@ input, .login_btn {
   margin-right: 1.5rem;
   background: transparent;
 }
-
-/* span::before {
-  content: '"';
-}
-span::after {
-  content: '"';
-} */
 </style>

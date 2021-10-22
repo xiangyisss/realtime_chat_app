@@ -1,33 +1,31 @@
 <template>
     <section class="chatbox" ref="chatbox">
-          <div
-            id="messages_container"
-            :class="message.name === userName ? 'sentMsgStyleToRight' : 'receiveMsgStyleLeft'"
-            v-for="message in allMessages"
-            :key="message.id"
-          >
-            <div class="user_avatar"
-            :class="message.name === userName && 'sentMsgStyleToMargin' ">
-            <img :src="message.avatar" alt="avatar">
-            </div>
+            <div
+                id="messages_container"
+                :class="message.name === userName ? 'sentMsgStyleToRight' : 'receiveMsgStyleLeft'"
+                v-for="message in allMessages"
+                :key="message.id"
+            >
+                <div class="user_avatar"
+                :class="message.name === userName && 'sentMsgStyleToMargin' ">
+                <img :src="message.avatar" alt="avatar">
+                </div>
 
-            <div class="time_name_text_block" :class="message.name === userName && 'sentMsgStyleDirection' ">
-                <div class="timeAndName_block">
-                    <div class="username" :class="message.name === userName && 'sentMsgStylePadding' "  >
-                    <!-- v-if="message.time !== allMessages[i - 1 ].time || message.name !== allMessages[i - 1 ]?.name" -->
-                    {{message.name}}</div>
-                    <div class="sendtime">{{`${message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}`}}</div>
-                </div>
-                <div
-                :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
-                    <p class="messages" v-if="message.type === 'text'">{{message.message}}</p>
-                    <div class="images" v-else id="images_container" >
-                    <img :src="message.imageUrl"  alt="images" @load="scrollToBottom">
+                <div class="time_name_text_block" :class="message.name === userName && 'sentMsgStyleDirection' ">
+                    <div class="timeAndName_block">
+                        <div class="username" :class="message.name === userName && 'sentMsgStylePadding' "  >
+                        {{message.name}}</div>
+                        <div class="sendtime">{{`${message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}`}}</div>
                     </div>
-                    <!-- <div class="time">{{`${message.timestamp.toDate().getDate() + '/' + '0' + message.timestamp.toDate().getMonth() + '/' + message.timestamp.toDate().getFullYear() +' ' + message.timestamp.toDate().getHours()}:${message.timestamp.toDate().getMinutes()}:${message.timestamp.toDate().getSeconds()}`}}</div> -->
+                    <div
+                    :class="message.name === userName ? 'sentMsgStyle' : 'receiveMsgStyle'">
+                        <p class="messages" v-if="message.type === 'text'">{{message.message}}</p>
+                        <div class="images" v-else id="images_container" >
+                        <img :src="message.imageUrl"  alt="images" @load="scrollToBottom">
+                        </div>
+                    </div>
                 </div>
             </div>
-          </div>
       </section>
 </template>
 
@@ -35,7 +33,7 @@
 import {
  defineComponent, Ref, ref, onMounted, onUpdated, watch,
 } from 'vue';
-import database from '../db';
+import database from '../../../db';
 
 
 export default defineComponent({
@@ -89,7 +87,6 @@ section {
     margin-bottom: 1.5rem;
     max-width: 60%;
     width:fit-content;
-    /* height:fit-content; */
     border-radius: 4px;
     position: relative;
 }
@@ -132,7 +129,6 @@ section {
 }
 
 #images_container img {
-    /* object-fit: cover; */
     width: 100%;
     height: 100%;
     max-width: 18rem;
@@ -172,6 +168,4 @@ section {
 .sentMsgStyleDirection {
      align-items: flex-end !important;
 }
-
-
 </style>

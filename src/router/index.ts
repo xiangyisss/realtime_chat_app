@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Login from '../views/Login.vue';
-import Chat from '../views/Chat.vue';
-import NotFound from '@/views/NotFound.vue';
-// import PrivateChat from '@/views/PrivateChat.vue';
+import Login from '../Pages/LoginPage/Login.vue';
+import Chat from '../Pages/ChatPage/Chat.vue';
+import NotFound from '../Pages/NotFound.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -23,12 +22,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'NotFound',
     component: NotFound,
   },
-  // {
-  //   path: '/privatechat/:userName',
-  //   name: 'privatechat',
-  //   component: PrivateChat,
-  //   props: true,
-  // },
 ];
 
 const router = createRouter({

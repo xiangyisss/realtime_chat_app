@@ -2,7 +2,6 @@
     <header>
         <p class="title">Chat board</p>
         <button @click="logout" type="button" >Log out</button>
-        <!-- <mobile-version-menu @roomNameToParent="roomName"/> -->
     </header>
 </template>
 
