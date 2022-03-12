@@ -1,3 +1,6 @@
+A project to help people connect and share ideas. Drop by and
+share some thoughts with strangers.
+
 # chat_app
 
 ## Project setup
