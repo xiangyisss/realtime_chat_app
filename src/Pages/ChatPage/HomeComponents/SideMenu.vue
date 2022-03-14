@@ -4,27 +4,16 @@
             <img :src="currentUserAvatar" alt="icon">
             <p class="username">{{userName}}</p>
         </div>
-        <ChatRoomList @roomNameToParent="roomName($event)"/>
+        <h5>Public chat room </h5>
     </aside>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import ChatRoomList from '../../../components/ChatRoomList.vue';
-
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  components: { ChatRoomList },
     name: 'SideMenu',
     props: { userName: String, currentUserAvatar: String },
-    setup(props, { emit }) {
-        const currentRoomName = ref('');
-        const roomName = (name : any) => {
-            currentRoomName.value = name;
-            emit('roomNameToParent', currentRoomName.value);
-        };
-        return { roomName };
-    },
 });
 </script>
 
@@ -44,6 +33,7 @@ aside {
     justify-content: center;
     align-items:  center;
     border-bottom: 1px solid rgb(230, 229, 229);
+    margin-bottom: 1rem;
 }
 .personalInfo img {
     width: 60px;

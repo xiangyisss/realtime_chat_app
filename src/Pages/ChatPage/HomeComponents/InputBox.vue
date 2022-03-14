@@ -21,7 +21,6 @@
             </div>
             </div>
         </form>
-        <!-- <div v-if="!notImage">Only could upload image file.</div> -->
         <div  v-if="show" class="emoji_box">
           <emoji @onEmojiClick = appendEmojiToText />
         </div>

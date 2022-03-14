@@ -21,18 +21,10 @@ module.exports = {
     'max-len': 'off',
     '@typescript-eslint/no-explicit-any': "off",
     '@typescript-eslint/no-non-null-assertion': 'off',
-    // '@typescript-eslint/no-var-requires': 0,
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
     'no-multiple-empty-lines': [2, { max: 99999, maxEOF: 0 }],
     indent: 'off',
-    // "editor.codeActionsOnSave": {
-    //   // For ESLint
-    //   "source.fixAll.eslint": true,
-    //   // For TSLint
-    //   "source.fixAll.tslint": true,
-    //   // For Stylelint
-    //   "source.fixAll.stylelint": true
-    // },
+    'linebreak-style': ["error", "windows"]
   },
 };

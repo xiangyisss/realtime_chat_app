@@ -34,6 +34,7 @@ import {
  defineComponent, Ref, ref, onMounted, onUpdated, watch,
 } from 'vue';
 import database from '../../../db';
+import { Message } from '@/Utils/Message';
 
 
 export default defineComponent({
@@ -41,7 +42,7 @@ export default defineComponent({
     props: { userName: String, currentUserAvatar: String, roomname: String },
     setup(props) {
         const chatbox = ref();
-        const allMessages : Ref<string[]> = ref([]);
+        const allMessages : Ref<Message[]> = ref([]);
         const loadAllMessages = (roomname: any) => {
             const query : any = database.firestore().collection('messages').where('room', '==', `${roomname}`).orderBy('timestamp');
             query.onSnapshot((snapShot : any) => {
